@@ -1,4 +1,4 @@
-import Frame.frame;
+import frame.frame;
 
 public class GameThread extends Thread {
 
