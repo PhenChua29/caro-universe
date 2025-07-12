@@ -16,9 +16,10 @@ import players.Genders;
  * A panel that displays player information.
  */
 public class PlayerInfoPanel extends JPanel {
+
   private Entity entity;
   private JLabel namelbl;
-  private JLabel genderlbl;
+  private JLabel scoreslbl;
   private JLabel avatarlbl;
 
   public PlayerInfoPanel(Entity entity, boolean isMirrored) {
@@ -32,7 +33,10 @@ public class PlayerInfoPanel extends JPanel {
     namelbl.setForeground(Color.WHITE);
     namelbl.setFont(new Font("Ink Free", Font.BOLD, 26));
 
-    genderlbl = new JLabel();
+    scoreslbl = new JLabel();
+    scoreslbl.setForeground(Color.WHITE);
+    scoreslbl.setFont(new Font("Ink Free", Font.BOLD, 13));
+    
     avatarlbl = new JLabel();
     avatarlbl.setSize(100, 100);
 
@@ -64,14 +68,15 @@ public class PlayerInfoPanel extends JPanel {
     gbc.gridx = isMirrored ? 0 : 1;
     gbc.gridy = 1;
     gbc.weighty = 0;
-    this.add(genderlbl, gbc);
+    this.add(scoreslbl, gbc);
   }
 
   public void update() {
     namelbl.setText(entity.getName());
-    genderlbl.setText(entity.getGender() == Genders.MALE ? "male" : "female");
+    scoreslbl.setText("Scores: " + entity.getScores());
+    System.out.println("Calling update for " + entity.getName() + " with score " + entity.getScores());
     Image scaledImage = entity.getAvatar().getImage().getScaledInstance(
-        100, 100, Image.SCALE_SMOOTH);
+	    100, 100, Image.SCALE_SMOOTH);
     ImageIcon avatarIcon = new ImageIcon(scaledImage);
     avatarlbl.setIcon(avatarIcon);
   }

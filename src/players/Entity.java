@@ -6,9 +6,11 @@ import javax.swing.ImageIcon;
  * A general player in the game.
  */
 public class Entity {
+
   private String name;
   private Genders gender;
   private ImageIcon avatar;
+  private int scores;
 
   public Entity(String name, Genders gender, ImageIcon avatar) {
     this.name = name;
@@ -28,15 +30,36 @@ public class Entity {
     }
   }
 
-  public String getName() { return name; }
+  public String getName() {
+    return name;
+  }
 
-  public void setName(String name) { this.name = name; }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-  public Genders getGender() { return gender; }
+  public Genders getGender() {
+    return gender;
+  }
 
-  public void setGender(Genders gender) { this.gender = gender; }
+  public void setGender(Genders gender) {
+    this.gender = gender;
+  }
 
-  public ImageIcon getAvatar() { return avatar; }
+  public ImageIcon getAvatar() {
+    return avatar;
+  }
 
-  public void setAvatar(ImageIcon avatar) { this.avatar = avatar; }
+  public void setAvatar(ImageIcon avatar) {
+    this.avatar = avatar;
+  }
+
+  public int getScores() {
+    return scores;
+  }
+
+  public void setScores(int scores) {
+    this.scores = scores;
+  }
+
 }

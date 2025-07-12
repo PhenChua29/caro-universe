@@ -15,6 +15,7 @@ import lib.JPanelTemplate;
 import players.Bot;
 import players.Move;
 import players.Player;
+import players.Record;
 
 public class GamePanel extends JPanelTemplate implements ActionListener {
 
@@ -26,13 +27,17 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
   private static ImageIcon ImageX;
   private static ImageIcon ImageO;
 
-  private final Player player;
+  private static Player player;
   private static Bot bot;
+
+  private static int totalMatches;
+  private static int matchCounts;
 
   // Init
   public GamePanel(final Player player, final Bot bot) {
     this.player = player;
     GamePanel.bot = bot;
+    matchCounts = 1;
 
     initgamePanel();
     initTurn();
@@ -56,9 +61,9 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
       final boolean debug = false;
 
       if (debug) {
-        button[i].setBorder(
-            BorderFactory.createMatteBorder(1, 1, 1, 1, Color.RED));
-        button[i].setStyling(debug);
+	button[i].setBorder(
+		BorderFactory.createMatteBorder(1, 1, 1, 1, Color.RED));
+	button[i].setStyling(debug);
       }
 
       this.add(button[i]);
@@ -82,7 +87,10 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
     final String filePathO = String.format("/img/move%s.png", NumO);
 
     ImageX = new ImageIcon(GamePanel.class.getResource(filePathX));
+    player.setAvatar(ImageX);
+
     ImageO = new ImageIcon(GamePanel.class.getResource(filePathO));
+    bot.setAvatar(ImageO);
 
     if (!humanTurn) {
       handleBotTurn();
@@ -97,6 +105,26 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
     }
 
     player_win = 0;
+    matchCounts = 1;
+    resetScores();
+    initTurn();
+  }
+
+  public static void resetScores() {
+    player.setScores(0);
+    bot.setScores(0);
+  }
+
+  public static void nextMatch() {
+    for (int i = 0; i < 9; ++i) {
+      playing_history[i / 3][i % 3] = 0;
+      button[i].setText("");
+      button[i].setIcon(null);
+    }
+
+    player_win = 0;
+    ++matchCounts;
+    System.out.println("match counts " + matchCounts);
     initTurn();
   }
 
@@ -109,18 +137,18 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
     }
 
     for (int i = 0; i < 9; ++i) {
-      final boolean isEmpty =
-          button[i].getText().equals("") && button[i].getIcon() == null;
+      final boolean isEmpty
+	      = button[i].getText().equals("") && button[i].getIcon() == null;
       final boolean isSource = e.getSource() == button[i];
 
       if (isSource && isEmpty) {
-        draw_XO(button[i]);
-        playing_history[i / 3][i % 3] = (humanTurn) ? 1 : 2;
-        System.out.println("Changing playing_history[" + (i / 3) + "][" +
-                           (i % 3) + "] = " + ((humanTurn) ? 1 : 2));
-        checkWinner();
-        changeTurn();
-        break;
+	draw_XO(button[i]);
+	playing_history[i / 3][i % 3] = (humanTurn) ? 1 : 2;
+	System.out.println("Changing playing_history[" + (i / 3) + "]["
+		+ (i % 3) + "] = " + ((humanTurn) ? 1 : 2));
+	checkWinner();
+	changeTurn();
+	break;
       }
     }
   }
@@ -155,26 +183,65 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
 
   private static void checkWinner() {
     if (horizontalCheck() == 1 || verticalCheck() == 1 || XCheck() == 1) {
+      if (player_win == 1) {
+	player.setScores(player.getScores() + 1);
+
+	Record r = player.getRecord();
+	r.setTotalGames(r.getTotalGames() + 1);
+	r.setTotalScore(r.getTotalScore() + 1);
+      } else {
+	bot.setScores(bot.getScores() + 1);
+      }
+
+      if (shouldPlayNextMatch()) {
+	EndGamePanel.setText("Player " + player_win + " win this match!");
+	EndGamePanel.setMode(EndGamePanel.BTN_MODE.NEXT_MATCH);
+      } else {
+	EndGamePanel.setText("Player " + player_win + " win!");
+	EndGamePanel.setMode(EndGamePanel.BTN_MODE.NEW_MATCH);
+      }
+
       frame.setEndGame_trigger(true);
-      EndGamePanel.setText("Player " + player_win + " win!");
-      System.out.println("Player " + player_win + " win!");
+
       return;
     }
+
     if (isFullBoard()) {
+      Record r = player.getRecord();
+      r.setTotalGames(r.getTotalGames() + 1);
+      r.setTotalScore(r.getTotalScore() + 1);
+
+      player.setScores(player.getScores() + 1);
+      bot.setScores(bot.getScores() + 1);
+
       frame.setEndGame_trigger(true);
-      EndGamePanel.setText("We have a tie");
-      System.out.println("We have a tie");
+
+      if (shouldPlayNextMatch()) {
+	EndGamePanel.setText("We have a tie in this match!");
+	EndGamePanel.setMode(EndGamePanel.BTN_MODE.NEXT_MATCH);
+      } else {
+	EndGamePanel.setText("We have a tie!");
+	EndGamePanel.setMode(EndGamePanel.BTN_MODE.NEW_MATCH);
+      }
     }
+  }
+
+  private static boolean isTie() {
+    return player.getScores() == bot.getScores();
+  }
+
+  private static boolean shouldPlayNextMatch() {
+    return isTie() || matchCounts < (int) (Math.ceil((Double.valueOf(totalMatches) / 2)));
   }
 
   private static int horizontalCheck() {
     for (int i = 0; i < 3; ++i) {
       if (playing_history[i][0] != 0) {
-        if (playing_history[i][0] == playing_history[i][1] &&
-            playing_history[i][1] == playing_history[i][2]) {
-          player_win = playing_history[i][0];
-          return 1;
-        }
+	if (playing_history[i][0] == playing_history[i][1]
+		&& playing_history[i][1] == playing_history[i][2]) {
+	  player_win = playing_history[i][0];
+	  return 1;
+	}
       }
     }
     return 0;
@@ -183,11 +250,11 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
   private static int verticalCheck() {
     for (int i = 0; i < 3; ++i) {
       if (playing_history[0][i] != 0) {
-        if (playing_history[0][i] == playing_history[1][i] &&
-            playing_history[1][i] == playing_history[2][i]) {
-          player_win = playing_history[0][i];
-          return 1;
-        }
+	if (playing_history[0][i] == playing_history[1][i]
+		&& playing_history[1][i] == playing_history[2][i]) {
+	  player_win = playing_history[0][i];
+	  return 1;
+	}
       }
     }
     return 0;
@@ -197,18 +264,18 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
     final int i = 0;
     int j = 0;
     if (playing_history[i][j] != 0) {
-      if (playing_history[i][j] == playing_history[i + 1][j + 1] &&
-          playing_history[i + 1][j + 1] == playing_history[i + 2][j + 2]) {
-        player_win = playing_history[i][j];
-        return 1;
+      if (playing_history[i][j] == playing_history[i + 1][j + 1]
+	      && playing_history[i + 1][j + 1] == playing_history[i + 2][j + 2]) {
+	player_win = playing_history[i][j];
+	return 1;
       }
     }
     j = 2;
     if (playing_history[i][j] != 0) {
-      if (playing_history[i][j] == playing_history[i + 1][j - 1] &&
-          playing_history[i + 1][j - 1] == playing_history[i + 2][j - 2]) {
-        player_win = playing_history[i][j];
-        return 1;
+      if (playing_history[i][j] == playing_history[i + 1][j - 1]
+	      && playing_history[i + 1][j - 1] == playing_history[i + 2][j - 2]) {
+	player_win = playing_history[i][j];
+	return 1;
       }
     }
     return 0;
@@ -218,12 +285,30 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
     int count = 0;
     for (int i = 0; i < playing_history.length; ++i) {
       for (int j = 0; j < playing_history[i].length; ++j) {
-        count += playing_history[i][j] != 0 ? 1 : 0;
+	count += playing_history[i][j] != 0 ? 1 : 0;
       }
     }
     return count == 9;
   }
 
   // Getter
-  public static boolean ishumanTurn() { return humanTurn; }
+  public static boolean ishumanTurn() {
+    return humanTurn;
+  }
+
+  public static int getTotalMatches() {
+    return totalMatches;
+  }
+
+  public static void setTotalMatches(int totalMatches) {
+    GamePanel.totalMatches = totalMatches;
+  }
+
+  public static int getMatchCounts() {
+    return matchCounts;
+  }
+
+  public static void setMatchCounts(int matchCounts) {
+    GamePanel.matchCounts = matchCounts;
+  }
 }

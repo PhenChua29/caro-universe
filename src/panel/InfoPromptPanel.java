@@ -24,7 +24,10 @@ import players.Genders;
 import players.Player;
 
 public class InfoPromptPanel extends JPanel implements ActionListener {
+
   private JTextField nameField;
+  private JTextField matchCountField;
+
   private JRadioButton maleRadio;
   private JRadioButton femaleRadio;
   private JButton confirmButton;
@@ -43,13 +46,19 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
     this.setVisible(true);
     this.setBounds(0, 0, 800, 800);
   }
+  
+  public void reset() {
+    nameField.setText("");
+    genderGroup.clearSelection();
+    matchCountField.setText("");
+  }
 
   private void initComponents() {
     JPanel content = new JPanel();
 
     content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
     content.setOpaque(false);
-    content.setSize(500, 250);
+    content.setSize(500, 400);
     int x = (800 - content.getWidth()) / 2;
     content.setLocation(x, 150);
 
@@ -85,6 +94,19 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
     content.add(genderPanel);
     content.add(Box.createVerticalStrut(8));
 
+    JLabel matchLabel = createLabel("Enter number of matches:", 30);
+    content.add(matchLabel);
+    content.add(Box.createVerticalStrut(8));
+
+    JPanel matchFieldPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+    matchFieldPanel.setOpaque(false);
+    matchCountField = new JTextField(5);
+    matchCountField.setFont(new Font("Arial", Font.PLAIN, 18));
+    matchCountField.setPreferredSize(new Dimension(60, 30));
+    matchFieldPanel.add(matchCountField);
+    content.add(matchFieldPanel);
+    content.add(Box.createVerticalStrut(12));
+
     JPanel confirmPanel = new JPanel();
     confirmPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     confirmPanel.setOpaque(false);
@@ -103,7 +125,7 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
     imgBg.setBounds(0, 0, 800, 800);
     this.add(imgBg);
     this.setComponentZOrder(imgBg,
-                            this.getComponentCount() - 1); // Send to back
+	    this.getComponentCount() - 1); // Send to back
   }
 
   private JLabel createLabel(String text, int fontSize) {
@@ -125,36 +147,51 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     String name = nameField.getText().trim();
-    Genders gender = maleRadio.isSelected()     ? Genders.MALE
-                     : femaleRadio.isSelected() ? Genders.FEMALE
-                                                : null;
+    Genders gender = maleRadio.isSelected() ? Genders.MALE
+	    : femaleRadio.isSelected() ? Genders.FEMALE
+	    : null;
 
     if (name.isEmpty() && gender == null) {
       JOptionPane.showMessageDialog(
-          this, "Please enter your name and select a gender.",
-          "Missing Information", JOptionPane.WARNING_MESSAGE);
+	      this, "Please enter your name and select a gender.",
+	      "Missing Information", JOptionPane.WARNING_MESSAGE);
       return;
     }
 
     if (name.isEmpty()) {
       JOptionPane.showMessageDialog(this, "Name field cannot be empty.",
-                                    "Missing Name",
-                                    JOptionPane.WARNING_MESSAGE);
+	      "Missing Name",
+	      JOptionPane.WARNING_MESSAGE);
       return;
     }
 
     if (gender == null) {
       JOptionPane.showMessageDialog(this, "Please select a gender.",
-                                    "Missing Gender",
-                                    JOptionPane.WARNING_MESSAGE);
+	      "Missing Gender",
+	      JOptionPane.WARNING_MESSAGE);
       return;
     }
 
-    System.out.println("Name: " + name);
-    System.out.println("Gender: " + gender);
+    String matchText = matchCountField.getText().trim();
+    int matchCount = 0;
+
+    try {
+      matchCount = Integer.parseInt(matchText);
+      if (matchCount <= 0 || matchCount % 2 == 0) {
+	throw new NumberFormatException();
+      }
+    } catch (NumberFormatException ex) {
+      JOptionPane.showMessageDialog(this,
+	      "Please enter a valid odd number greater than 0 for number of matches.",
+	      "Invalid Match Count",
+	      JOptionPane.WARNING_MESSAGE);
+      return;
+    }
 
     player.setName(name);
     player.setGender(gender);
+    GamePanel.setTotalMatches(matchCount);
+    GamePanel.initNewGame();
     frame.setNewGame_trigger(true);
   }
 }

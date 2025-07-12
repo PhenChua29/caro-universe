@@ -72,8 +72,9 @@ public class frame extends JFrameTemplate {
       System.out.println("Switched into " + inGamePanel);
       switchPanel(inGamePanel);
       setNewGame_trigger(false);
+      
       try {
-        Thread.sleep(2000);
+        Thread.sleep(1000);
       } catch (Exception e) {
         System.out.println(e);
         e.printStackTrace();
@@ -82,6 +83,7 @@ public class frame extends JFrameTemplate {
     }
 
     if (info_prompt_trigger) {
+      InfoPromptPanel.reset();
       switchPanel(infoPromptPanel);
       System.out.println("Switched into " + infoPromptPanel);
       setInfo_prompt_trigger(false);
