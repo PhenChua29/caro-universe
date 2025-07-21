@@ -1,7 +1,7 @@
 package constants;
 
 /**
- * The gamme's difficulty, which control how the bot reacts.
+ * The game's difficulty, which controls how the bot reacts.
  */
 public enum Difficulty {
   EASY,
