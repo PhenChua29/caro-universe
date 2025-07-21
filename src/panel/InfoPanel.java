@@ -152,9 +152,9 @@ public class InfoPanel extends JPanelTemplate {
     timerThread.start();
   }
 
-  public static void resetTimerThread(boolean isToogleVisibility) {
+  public static void resetTimerThread(boolean isToggleVisibility) {
     stopTimer = true;
-    timerLbl.setVisible(!isToogleVisibility);
+    timerLbl.setVisible(!isToggleVisibility);
 
     if (timerThread != null && timerThread.isAlive()) {
       timerThread.interrupt();
