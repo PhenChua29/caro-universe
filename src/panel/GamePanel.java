@@ -280,6 +280,8 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
 
       Record r = player.getRecord();
       r.setTotalScore(r.getTotalScore() + UNDO_PENALTY);
+      recordManager.update(r);
+      InfoPanel.resetTimerThread(false);
       InGamePanel.update();
       ++undoCount;
     }

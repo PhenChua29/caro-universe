@@ -8,6 +8,7 @@ import panel.InGamePanel;
 import panel.InfoPromptPanel;
 import panel.MenuPanel;
 import panel.AboutUsPanel;
+import panel.InstructionPanel;
 import object.Bot;
 import object.Player;
 
@@ -18,11 +19,13 @@ public class Frame extends JFrameTemplate {
   public static final String menuPanel = "MenuPanel";
   public static final String inGamePanel = "InGamePanel";
   public static final String endGamePanel = "EndGamePanel";
+  public static final String instructionPanel = "InstructionPanel";
   public static final String aboutUsPanel = "AboutUsPanel";
   public static final String infoPromptPanel = "InfoPromptPanel";
 
   private static boolean newGame_trigger = false;
   private static boolean quitGame_trigger = false;
+  private static boolean instruction_trigger = false;
   private static boolean aboutUs_trigger = false;
   private static boolean endGame_trigger = false;
   private static boolean menu_trigger = false;
@@ -31,6 +34,7 @@ public class Frame extends JFrameTemplate {
   private MenuPanel MenuPanel;
   private InGamePanel InGamePanel;
   private EndGamePanel EndGamePanel;
+  private InstructionPanel InstructionPanel;
   private AboutUsPanel AboutUsPanel;
   private InfoPromptPanel InfoPromptPanel;
 
@@ -62,6 +66,9 @@ public class Frame extends JFrameTemplate {
     EndGamePanel = new EndGamePanel();
     this.add(EndGamePanel);
 
+    InstructionPanel = new InstructionPanel();
+    this.add(InstructionPanel);
+
     AboutUsPanel = new AboutUsPanel();
     this.add(AboutUsPanel);
 
@@ -92,6 +99,13 @@ public class Frame extends JFrameTemplate {
       switchPanel(infoPromptPanel);
       System.out.println("Switched into " + infoPromptPanel);
       setInfo_prompt_trigger(false);
+      return;
+    }
+
+    if (instruction_trigger) {
+      System.out.println("Switched into " + instructionPanel);
+      switchPanel(instructionPanel);
+      setInstruction_trigger(false);
       return;
     }
 
@@ -144,6 +158,8 @@ public class Frame extends JFrameTemplate {
       setContentPane(EndGamePanel);
     } else if (panel.equals(aboutUsPanel)) {
       setContentPane(AboutUsPanel);
+    } else if (panel.equals(instructionPanel)) {
+      setContentPane(InstructionPanel);
     }
 
     repaint();
@@ -158,7 +174,7 @@ public class Frame extends JFrameTemplate {
    */
   public static boolean isStateChange() {
     return (newGame_trigger || info_prompt_trigger || quitGame_trigger
-	    || aboutUs_trigger || endGame_trigger || menu_trigger);
+        || aboutUs_trigger || endGame_trigger || menu_trigger || instruction_trigger);
   }
 
   // GETTERS & SETTERS
@@ -176,6 +192,14 @@ public class Frame extends JFrameTemplate {
 
   public static void setQuitGame_trigger(boolean QuitGame_trigger) {
     quitGame_trigger = QuitGame_trigger;
+  }
+
+  public static boolean isInstruction_trigger() {
+    return instruction_trigger;
+  }
+
+  public static void setInstruction_trigger(boolean instruction_trigger_state) {
+    instruction_trigger = instruction_trigger_state;
   }
 
   public static boolean isAboutUs_trigger() {

@@ -15,6 +15,7 @@ import lib.JPanelTemplate;
 public class MenuPanel extends JPanelTemplate implements ActionListener {
 
   private JButtonTemplate newGameBtn;
+  private JButtonTemplate howToPlayBtn;
   private JButtonTemplate aboutBtn;
   private JButtonTemplate quitBtn;
 
@@ -29,10 +30,17 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
     newGameBtn.setHorizontalTextPosition(SwingConstants.CENTER);
     newGameBtn.setStyling(false);
 
+    howToPlayBtn = new JButtonTemplate();
+    howToPlayBtn.setImageBackground(new ImageIcon(getClass().getResource("/img/button/blueLr.png")).getImage());
+    howToPlayBtn.set(450, 310, 400, 110, "  How to Play", Color.BLACK, Color.WHITE);
+    howToPlayBtn.setFont(new Font("Ink Free", Font.PLAIN, 48));
+    howToPlayBtn.setHorizontalAlignment(SwingConstants.LEFT);
+    howToPlayBtn.setStyling(false);
+
     aboutBtn = new JButtonTemplate();
 
     aboutBtn.setImageBackground(new ImageIcon(getClass().getResource("/img/button/blueLr.png")).getImage());
-    aboutBtn.set(540, 440, 400, 110, "  About Us", Color.BLACK, Color.WHITE);
+    aboutBtn.set(540, 460, 400, 110, "  About Us", Color.BLACK, Color.WHITE);
     aboutBtn.setFont(new Font("Ink Free", Font.PLAIN, 48));
     aboutBtn.setHorizontalAlignment(SwingConstants.LEFT);
     aboutBtn.setStyling(false);
@@ -40,16 +48,18 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
     quitBtn = new JButtonTemplate();
 
     quitBtn.setImageBackground(new ImageIcon(getClass().getResource("/img/button/blueLr.png")).getImage());
-    quitBtn.set(600, 585, 400, 100, "   Quit", Color.BLACK, Color.WHITE);
+    quitBtn.set(600, 610, 400, 100, "   Quit", Color.BLACK, Color.WHITE);
     quitBtn.setFont(new Font("Ink Free", Font.PLAIN, 48));
     quitBtn.setHorizontalAlignment(SwingConstants.LEFT);
     quitBtn.setStyling(false);
 
     newGameBtn.addActionListener(this);
+    howToPlayBtn.addActionListener(this);
     aboutBtn.addActionListener(this);
     quitBtn.addActionListener(this);
 
     this.add(newGameBtn);
+    this.add(howToPlayBtn);
     this.add(aboutBtn);
     this.add(quitBtn);
 
@@ -147,6 +157,8 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
       Frame.setAboutUs_trigger(true);
     } else if (e.getSource() == quitBtn) {
       Frame.setQuitGame_trigger(true);
+    } else if (e.getSource() == howToPlayBtn) {
+      Frame.setInstruction_trigger(true);
     }
   }
 }
