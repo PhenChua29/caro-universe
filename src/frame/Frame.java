@@ -7,9 +7,9 @@ import panel.EndGamePanel;
 import panel.InGamePanel;
 import panel.InfoPromptPanel;
 import panel.MenuPanel;
+import panel.AboutUsPanel;
 import object.Bot;
 import object.Player;
-import panel.AboutUsPanel;
 
 public class Frame extends JFrameTemplate {
 
