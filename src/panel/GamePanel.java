@@ -437,6 +437,7 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
 	      break;
 	    case MEDIUM:
 	      factor = 1;
+	      break;
 	    case HARD:
 	      factor = 1.5f;
 	  }
