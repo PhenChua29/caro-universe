@@ -47,7 +47,7 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
     quitBtn.addActionListener(this);
 
     this.add(newGameBtn);
-//    this.add(creditButton);
+    // TODO: Add creditButton to the panel when the feature is implemented.
     this.add(quitBtn);
 
     JLabel bg = new JLabel();
