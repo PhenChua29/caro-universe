@@ -51,7 +51,7 @@ public class CreditPanel extends JPanel implements ActionListener {
 
     private void init_background() {
         JLabel imgBg = new JLabel();
-        imgBg.setIcon(new ImageIcon(getClass().getResource("/img/3.png")));
+        imgBg.setIcon(new ImageIcon(getClass().getResource("/img/bg/3.png")));
         imgBg.setBounds(0, 0, 800, 800);
         this.add(imgBg);
     }

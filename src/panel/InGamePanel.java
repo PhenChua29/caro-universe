@@ -1,18 +1,21 @@
 package panel;
 
-import java.awt.Image;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import players.Bot;
-import players.Player;
+import lib.JPanelTemplate;
+import object.Bot;
+import object.Player;
 
 /**
  * A panel that contains the main game's interface.
  */
 public class InGamePanel extends JPanel {
-  private GamePanel gamePanel;
-  private InfoPanel infoPanel;
+
+  private final GamePanel gamePanel;
+  private static InfoPanel infoPanel;
 
   public InGamePanel(final Player player, final Bot bot) {
     super();
@@ -20,31 +23,40 @@ public class InGamePanel extends JPanel {
     gamePanel = new GamePanel(player, bot);
     infoPanel = new InfoPanel(player, bot);
 
-    this.setBounds(0, 0, 800, 800);
-    this.setLayout(null);
+    setBounds(0, 0, 800, 800);
+    setLayout(null);
 
-    this.add(infoPanel);
-    this.add(gamePanel);
+    add(infoPanel);
+    add(gamePanel);
     initBg();
   }
 
   private void initBg() {
-    JPanel bgPanel = new JPanel();
-    bgPanel.setBounds(0, 0, 800, 800);
+    JPanelTemplate bgPanel = new JPanelTemplate();
+    bgPanel.set(0, 0, 800, 800, "null", new Color(6, 5, 55));
+    bgPanel.setOpaque(true);
 
     JLabel imgBg = new JLabel();
-    ImageIcon imageIcon = new ImageIcon(getClass().getResource("/img/4.png"));
-    Image image = imageIcon.getImage();
-    image = image.getScaledInstance(800, 800, Image.SCALE_SMOOTH);
+    ImageIcon imageIcon = new ImageIcon(getClass().getResource("/img/bg/b5r.png"));
+    imgBg.setIcon(imageIcon);
+    imgBg.setBounds(0, 100, 800, 700);
 
-    imgBg.setIcon(new ImageIcon(image));
-    imgBg.setBounds(0, 0, 800, 800);
-
-    bgPanel.add(imgBg);
+    bgPanel.add(imgBg, BorderLayout.CENTER);
     this.add(bgPanel);
     this.setComponentZOrder(bgPanel, this.getComponentCount() - 1);
   }
 
-  public void update() { infoPanel.update(); }
-  public void initNewGame() { GamePanel.initNewGame(); }
+  public static void update() {
+    infoPanel.update();
+  }
+
+  public static void initNewGame() {
+    GamePanel.initNewGame();
+    InfoPanel.resetTimerThread(true);
+  }
+
+  public static void nextMatch() {
+    GamePanel.nextMatch();
+    InfoPanel.resetTimerThread(true);
+  }
 }

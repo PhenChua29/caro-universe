@@ -6,12 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import frame.frame;
+import lib.JButtonTemplate;
 
 public class EndGamePanel extends JPanel implements ActionListener {
 
@@ -21,9 +21,9 @@ public class EndGamePanel extends JPanel implements ActionListener {
   }
 
   private static BTN_MODE mode;
-  private static JButton newGameBtn;
-  private static JButton nextMatchBtn;
-  private JButton homeBtn;
+  private static JButtonTemplate newGameBtn;
+  private static JButtonTemplate nextMatchBtn;
+  private JButtonTemplate homeBtn;
   private static JLabel textField;
 
   public EndGamePanel() {
@@ -44,23 +44,25 @@ public class EndGamePanel extends JPanel implements ActionListener {
   }
 
   private void init_button() {
-    newGameBtn = new JButton("New game");
+    newGameBtn = new JButtonTemplate("New game");
     newGameBtn.setBounds(190, 395, 420, 130);
-    initButton(newGameBtn, 75);
+    newGameBtn.setIcon(new ImageIcon(getClass().getResource("/img/button/blueLr.png")));
+    initButton(newGameBtn, 62);
 
-    nextMatchBtn = new JButton("Next match");
+    nextMatchBtn = new JButtonTemplate("Next round");
     nextMatchBtn.setBounds(190, 395, 420, 130);
+    nextMatchBtn.setIcon(new ImageIcon(getClass().getResource("/img/button/blueLr.png")));
     initButton(nextMatchBtn, 62);
 
-    homeBtn = new JButton();
-    homeBtn.setIcon(new ImageIcon(getClass().getResource("/img/home.png")));
+    homeBtn = new JButtonTemplate();
+    homeBtn.setIcon(new ImageIcon(getClass().getResource("/img/button/home.png")));
     homeBtn.setBounds(700, 680, 66, 71);
     initButton(homeBtn, 75);
   }
 
   private void init_background() {
     JLabel imgBg = new JLabel();
-    imgBg.setIcon(new ImageIcon(getClass().getResource("/img/2.png")));
+    imgBg.setIcon(new ImageIcon(getClass().getResource("/img/bg/2.png")));
     imgBg.setBounds(0, 0, 800, 800);
     this.add(imgBg);
   }
@@ -77,7 +79,7 @@ public class EndGamePanel extends JPanel implements ActionListener {
     this.add(textField);
   }
 
-  private void initButton(JButton b, int fontSize) {
+  private void initButton(JButtonTemplate b, int fontSize) {
     b.setForeground(Color.WHITE);
     b.setFocusable(false);
     b.setFont(new Font("Ink Free", Font.BOLD, fontSize));
@@ -86,6 +88,8 @@ public class EndGamePanel extends JPanel implements ActionListener {
     b.setBorderPainted(false);
     b.setContentAreaFilled(false);
     b.addActionListener(this);
+    b.setHorizontalTextPosition(SwingConstants.CENTER);
+    b.setStyling(false);
     this.add(b);
   }
 
@@ -113,14 +117,14 @@ public class EndGamePanel extends JPanel implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource().equals(newGameBtn)) {
-      GamePanel.initNewGame();
+      InGamePanel.initNewGame();
       System.out.println("New game btn pressed");
       frame.setNewGame_trigger(true);
       return;
     }
 
     if (e.getSource().equals(nextMatchBtn)) {
-      GamePanel.nextMatch();
+      InGamePanel.nextMatch();
       System.out.println("Next match btn pressed");
       frame.setNewGame_trigger(true);
       return;

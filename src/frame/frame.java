@@ -1,14 +1,15 @@
 package frame;
 
 import java.awt.Color;
+import java.awt.Toolkit;
 import lib.JFrameTemplate;
 import panel.CreditPanel;
 import panel.EndGamePanel;
 import panel.InGamePanel;
 import panel.InfoPromptPanel;
 import panel.MenuPanel;
-import players.Bot;
-import players.Player;
+import object.Bot;
+import object.Player;
 
 public class frame extends JFrameTemplate {
 
@@ -37,10 +38,12 @@ public class frame extends JFrameTemplate {
   public frame() {
     currentPlayer = new Player();
     bot = new Bot();
+    bot.loadRandomMoveExcept(currentPlayer.loadRandomMove());
 
-    this.set(0, 0, 800, 800, "BorderLayout", Color.BLACK);
-    this.setResizable(false);
-    this.setTitle("Tic Tac Toe");
+    set(0, 0, 800, 800, "BorderLayout", Color.BLACK);
+    setResizable(false);
+    setTitle("Caro Universe");
+    setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/elements/ico.png")));
     initPanels();
   }
 
@@ -48,7 +51,7 @@ public class frame extends JFrameTemplate {
     MenuPanel = new MenuPanel();
     this.add(MenuPanel);
 
-    InfoPromptPanel = new InfoPromptPanel(currentPlayer);
+    InfoPromptPanel = new InfoPromptPanel(currentPlayer, bot);
     this.add(InfoPromptPanel);
 
     InGamePanel = new InGamePanel(currentPlayer, bot);
@@ -72,12 +75,12 @@ public class frame extends JFrameTemplate {
       System.out.println("Switched into " + inGamePanel);
       switchPanel(inGamePanel);
       setNewGame_trigger(false);
-      
+
       try {
-        Thread.sleep(1000);
+	Thread.sleep(1000);
       } catch (Exception e) {
-        System.out.println(e);
-        e.printStackTrace();
+	System.out.println(e);
+	e.printStackTrace();
       }
       return;
     }
@@ -152,37 +155,47 @@ public class frame extends JFrameTemplate {
    * {@code false} otherwise
    */
   public static boolean isStateChange() {
-    return (newGame_trigger || info_prompt_trigger || quitGame_trigger ||
-            credit_trigger || endGame_trigger || menu_trigger);
+    return (newGame_trigger || info_prompt_trigger || quitGame_trigger
+	    || credit_trigger || endGame_trigger || menu_trigger);
   }
 
   // GETTERS & SETTERS
-  public static boolean isNewGame_trigger() { return newGame_trigger; }
+  public static boolean isNewGame_trigger() {
+    return newGame_trigger;
+  }
 
   public static void setNewGame_trigger(boolean newGame_state) {
     newGame_trigger = newGame_state;
   }
 
-  public static boolean isQuitGame_trigger() { return quitGame_trigger; }
+  public static boolean isQuitGame_trigger() {
+    return quitGame_trigger;
+  }
 
   public static void setQuitGame_trigger(boolean QuitGame_trigger) {
     quitGame_trigger = QuitGame_trigger;
   }
 
-  public static boolean isCredit_trigger() { return credit_trigger; }
+  public static boolean isCredit_trigger() {
+    return credit_trigger;
+  }
 
   public static void setCredit_trigger(boolean Credit_trigger) {
     credit_trigger = Credit_trigger;
     System.out.println("Credit_trigger set:" + isCredit_trigger());
   }
 
-  public static boolean isEndGame_trigger() { return endGame_trigger; }
+  public static boolean isEndGame_trigger() {
+    return endGame_trigger;
+  }
 
   public static void setEndGame_trigger(boolean EndGame_trigger) {
     endGame_trigger = EndGame_trigger;
   }
 
-  public static boolean isMenu_trigger() { return menu_trigger; }
+  public static boolean isMenu_trigger() {
+    return menu_trigger;
+  }
 
   public static void setMenu_trigger(boolean Menu_trigger) {
     menu_trigger = Menu_trigger;

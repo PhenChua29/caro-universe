@@ -1,5 +1,7 @@
 package panel;
 
+import constants.Difficulty;
+import constants.Genders;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -12,7 +14,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -20,22 +21,28 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import frame.frame;
-import players.Genders;
-import players.Player;
+import javax.swing.JComboBox;
+import javax.swing.SwingConstants;
+import lib.JButtonTemplate;
+import object.Bot;
+import object.Player;
 
 public class InfoPromptPanel extends JPanel implements ActionListener {
 
   private JTextField nameField;
-  private JTextField matchCountField;
+  private JComboBox<Integer> matchCountBox;
+  private JComboBox<Difficulty> difficultyComboBox;
 
   private JRadioButton maleRadio;
   private JRadioButton femaleRadio;
-  private JButton confirmButton;
+  private JButtonTemplate confirmButton;
   private ButtonGroup genderGroup;
   private Player player;
+  private Bot bot;
 
-  public InfoPromptPanel(Player player) {
+  public InfoPromptPanel(Player player, Bot bot) {
     this.player = player;
+    this.bot = bot;
     init();
     initComponents();
     initBackground();
@@ -46,11 +53,12 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
     this.setVisible(true);
     this.setBounds(0, 0, 800, 800);
   }
-  
+
   public void reset() {
     nameField.setText("");
     genderGroup.clearSelection();
-    matchCountField.setText("");
+    matchCountBox.setSelectedIndex(0);
+    difficultyComboBox.setSelectedIndex(0);
   }
 
   private void initComponents() {
@@ -58,9 +66,9 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
 
     content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
     content.setOpaque(false);
-    content.setSize(500, 400);
+    content.setSize(500, 450);
     int x = (800 - content.getWidth()) / 2;
-    content.setLocation(x, 150);
+    content.setLocation(x, 130);
 
     JLabel nameLabel = createLabel("Enter your name:", 36);
     content.add(nameLabel);
@@ -94,24 +102,51 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
     content.add(genderPanel);
     content.add(Box.createVerticalStrut(8));
 
-    JLabel matchLabel = createLabel("Enter number of matches:", 30);
+    JLabel matchLabel = createLabel("Choose number of matches:", 30);
     content.add(matchLabel);
     content.add(Box.createVerticalStrut(8));
 
     JPanel matchFieldPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
     matchFieldPanel.setOpaque(false);
-    matchCountField = new JTextField(5);
-    matchCountField.setFont(new Font("Arial", Font.PLAIN, 18));
-    matchCountField.setPreferredSize(new Dimension(60, 30));
-    matchFieldPanel.add(matchCountField);
+
+    matchCountBox = new JComboBox<>();
+    matchCountBox.setFont(new Font("Arial", Font.PLAIN, 18));
+    matchCountBox.setPreferredSize(new Dimension(60, 30));
+
+    for (int i = 1; i < 20; i += 2) {
+      matchCountBox.addItem(i);
+    }
+
+    matchFieldPanel.add(matchCountBox);
     content.add(matchFieldPanel);
+    content.add(Box.createVerticalStrut(8));
+
+    JLabel difficultyLabel = createLabel("Choose bot difficulty:", 30);
+    content.add(difficultyLabel);
+    content.add(Box.createVerticalStrut(8));
+
+    JPanel difficultyPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+    difficultyPanel.setOpaque(false);
+
+    difficultyComboBox = new JComboBox<>(Difficulty.values());
+    difficultyComboBox.setFont(new Font("Arial", Font.PLAIN, 18));
+    difficultyComboBox.setPreferredSize(new Dimension(100, 30));
+    difficultyPanel.add(difficultyComboBox);
+    content.add(difficultyPanel);
     content.add(Box.createVerticalStrut(12));
 
     JPanel confirmPanel = new JPanel();
     confirmPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     confirmPanel.setOpaque(false);
-    confirmButton = new JButton("Confirm");
-    confirmButton.setMaximumSize(new Dimension(150, 40));
+
+    confirmButton = new JButtonTemplate();
+    confirmButton.setIcon(new ImageIcon(getClass().getResource("/img/button/confirmBg.png")));
+    confirmButton.set(0, 0, 256, 60, "Confirm", Color.BLACK, Color.WHITE);
+    confirmButton.setMaximumSize(new Dimension(256, 60));
+    confirmButton.setFont(new Font("Ink Free", Font.PLAIN, 28));
+    confirmButton.setHorizontalTextPosition(SwingConstants.CENTER);
+    confirmButton.setStyling(false);
+
     confirmButton.addActionListener(this);
     confirmPanel.add(confirmButton);
     content.add(confirmPanel);
@@ -121,18 +156,18 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
 
   private void initBackground() {
     JLabel imgBg = new JLabel();
-    imgBg.setIcon(new ImageIcon(getClass().getResource("/img/1.png")));
+    imgBg.setIcon(new ImageIcon(getClass().getResource("/img/bg/prompt.png")));
     imgBg.setBounds(0, 0, 800, 800);
     this.add(imgBg);
     this.setComponentZOrder(imgBg,
-	    this.getComponentCount() - 1); // Send to back
+        this.getComponentCount() - 1); // Send to back
   }
 
   private JLabel createLabel(String text, int fontSize) {
     JLabel label = new JLabel(text);
     label.setFont(new Font("Arial", Font.BOLD, fontSize));
     label.setForeground(Color.WHITE);
-    label.setAlignmentX(Component.LEFT_ALIGNMENT);
+    label.setAlignmentX(Component.CENTER_ALIGNMENT);
     return label;
   }
 
@@ -148,50 +183,44 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     String name = nameField.getText().trim();
     Genders gender = maleRadio.isSelected() ? Genders.MALE
-	    : femaleRadio.isSelected() ? Genders.FEMALE
-	    : null;
+        : femaleRadio.isSelected() ? Genders.FEMALE
+        : null;
 
     if (name.isEmpty() && gender == null) {
       JOptionPane.showMessageDialog(
-	      this, "Please enter your name and select a gender.",
-	      "Missing Information", JOptionPane.WARNING_MESSAGE);
+          this, "Please enter your name and select a gender.",
+          "Missing Information", JOptionPane.WARNING_MESSAGE);
       return;
     }
 
     if (name.isEmpty()) {
       JOptionPane.showMessageDialog(this, "Name field cannot be empty.",
-	      "Missing Name",
-	      JOptionPane.WARNING_MESSAGE);
+          "Missing Name",
+          JOptionPane.WARNING_MESSAGE);
       return;
     }
 
     if (gender == null) {
       JOptionPane.showMessageDialog(this, "Please select a gender.",
-	      "Missing Gender",
-	      JOptionPane.WARNING_MESSAGE);
+          "Missing Gender",
+          JOptionPane.WARNING_MESSAGE);
       return;
     }
 
-    String matchText = matchCountField.getText().trim();
-    int matchCount = 0;
-
-    try {
-      matchCount = Integer.parseInt(matchText);
-      if (matchCount <= 0 || matchCount % 2 == 0) {
-	throw new NumberFormatException();
-      }
-    } catch (NumberFormatException ex) {
-      JOptionPane.showMessageDialog(this,
-	      "Please enter a valid odd number greater than 0 for number of matches.",
-	      "Invalid Match Count",
-	      JOptionPane.WARNING_MESSAGE);
-      return;
-    }
-
+    int matchCount = (Integer) matchCountBox.getSelectedItem();
+    Difficulty difficulty = (Difficulty) difficultyComboBox.getSelectedItem(); 
+    
     player.setName(name);
     player.setGender(gender);
+    player.loadRandomAvatar();
+
+    bot.setDifficulty(difficulty);
+    InfoPanel.setCountDownTime(difficulty);
+    bot.loadRandomAvatar();
+    bot.loadRandomMoveExcept(player.loadRandomMove());
+
     GamePanel.setTotalMatches(matchCount);
-    GamePanel.initNewGame();
+    InGamePanel.initNewGame();
     frame.setNewGame_trigger(true);
   }
 }
