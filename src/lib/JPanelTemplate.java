@@ -46,7 +46,7 @@ public class JPanelTemplate extends JPanel {
   }
 
   public void playSound(String soundName) {
-    String filePath = String.format("../audio/%s.png", soundName);
+    String filePath = String.format("../audio/%s.wav", soundName);
 
     try {
       AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
