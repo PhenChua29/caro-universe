@@ -28,7 +28,7 @@ public class EndGamePanel extends JPanel implements ActionListener {
   public EndGamePanel() {
     init();
     init_button();
-    init_tilte();
+    init_title();
     init_background();
   }
 
@@ -64,7 +64,7 @@ public class EndGamePanel extends JPanel implements ActionListener {
     this.add(imgBg);
   }
 
-  private void init_tilte() {
+  private void init_title() {
     textField = new JLabel("", SwingConstants.CENTER);
 
     textField.setForeground(new Color(131, 206, 255));
