@@ -6,13 +6,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import lib.JButtonTemplate;
 
 import lib.JPanelTemplate;
@@ -27,7 +28,8 @@ public class InfoPanel extends JPanelTemplate {
   private JButtonTemplate undoBtn;
   private static JLabel timerLbl;
 
-  private static Thread timerThread;
+  private static Timer swingTimer;
+  private static int seconds;
   private static volatile boolean stopTimer = false;
 
   private static final int BASE_COUNT_DOWN_TIME = 60;
@@ -111,53 +113,46 @@ public class InfoPanel extends JPanelTemplate {
 
   private static void startTimerThread() {
     stopTimer = false;
-    timerThread = new Thread(() -> {
-      try {
-	Thread.sleep(300);
-      } catch (InterruptedException e) {
-	return;
-      }
 
-      if (stopTimer) {
-	return;
-      }
+    if (swingTimer != null && swingTimer.isRunning()) {
+      swingTimer.stop();
+    }
 
-      SwingUtilities.invokeLater(() -> GamePanel.timerStartHandler());
+    GamePanel.timerStartHandler();
+    timerLbl.setVisible(true);
 
-      int seconds = countDownTime;
-      timerLbl.setVisible(true);
+    seconds = countDownTime;
 
-      while (seconds >= 0 && !stopTimer) {
-	final int currentSec = seconds;
-
-	SwingUtilities.invokeLater(() -> {
-	  timerLbl.setText("Timer: " + currentSec + "s");
-	  timerLbl.setForeground(currentSec <= 20 ? Color.RED : Color.WHITE);
-	});
-
-	if (seconds == 0) {
-	  SwingUtilities.invokeLater(() -> GamePanel.makeRandomMove());
-	  break;
+    swingTimer = new Timer(1000, new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+	if (stopTimer) {
+	  swingTimer.stop();
+	  return;
 	}
 
-	try {
-	  Thread.sleep(1000);
-	} catch (InterruptedException e) {
-	  return;
+	timerLbl.setText("Timer: " + seconds + "s");
+	timerLbl.setForeground(seconds <= 20 ? Color.RED : Color.WHITE);
+
+	if (seconds == 0) {
+	  swingTimer.stop();
+	  GamePanel.makeRandomMove();
 	}
 
 	seconds--;
       }
     });
-    timerThread.start();
+
+    swingTimer.setInitialDelay(0);
+    swingTimer.start();
   }
 
   public static void resetTimerThread(boolean isToggleVisibility) {
     stopTimer = true;
     timerLbl.setVisible(!isToggleVisibility);
 
-    if (timerThread != null && timerThread.isAlive()) {
-      timerThread.interrupt();
+    if (swingTimer != null && swingTimer.isRunning()) {
+      swingTimer.stop();
     }
 
     startTimerThread();

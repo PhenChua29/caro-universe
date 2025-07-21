@@ -13,6 +13,8 @@ import object.Player;
 
 public class Frame extends JFrameTemplate {
 
+  public static final int WIDTH = 800;
+  
   public static final String menuPanel = "MenuPanel";
   public static final String inGamePanel = "InGamePanel";
   public static final String endGamePanel = "EndGamePanel";
@@ -40,7 +42,7 @@ public class Frame extends JFrameTemplate {
     bot = new Bot();
     bot.loadRandomMoveExcept(currentPlayer.loadRandomMove());
 
-    set(0, 0, 800, 800, "BorderLayout", Color.BLACK);
+    set(0, 0, WIDTH, 800, "BorderLayout", Color.BLACK);
     setResizable(false);
     setTitle("Caro Universe");
     setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/elements/ico.png")));

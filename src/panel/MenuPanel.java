@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import lib.JButtonTemplate;
 import lib.JPanelTemplate;
 
@@ -56,7 +57,7 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
     this.add(bg);
 
     init_cloud();
-    animate_cloud();
+    runAnimations();
   }
 
   private JLabel[] e;
@@ -94,72 +95,46 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
     this.setComponentZOrder(e[4], 3);
   }
 
-  private Thread cloudThread;
-
-  private void animate_cloud() {
-
-    cloudThread = new Thread() {
-      public void run() {
-
-	while (true) {
-	  if (e[0].getX() == 800) {
-	    e[0].setBounds(0 - e[0].getWidth(), e[0].getY(), e[0].getWidth(),
-		    e[0].getHeight());
-	  }
-	  if (e[0].getX() != 800) {
-	    e[0].setBounds(e[0].getX() + 1, e[0].getY(), e[0].getWidth(),
-		    e[0].getHeight());
-	  }
-
-	  if (e[1].getX() == 800) {
-	    e[1].setBounds(0 - e[1].getWidth(), e[1].getY(), e[1].getWidth(),
-		    e[1].getHeight());
-	  }
-	  if (e[1].getX() != 800) {
-	    e[1].setBounds(e[1].getX() + 2, e[1].getY(), e[1].getWidth(),
-		    e[1].getHeight());
-	  }
-
-	  if (e[2].getX() == -e[2].getWidth()) {
-	    e[2].setBounds(800 + e[2].getWidth(), e[2].getY(), e[2].getWidth(),
-		    e[2].getHeight());
-	  }
-	  if (e[2].getX() != -e[2].getWidth()) {
-	    e[2].setBounds(e[2].getX() - 1, e[2].getY(), e[2].getWidth(),
-		    e[2].getHeight());
-	  }
-
-	  try {
-	    Thread.sleep(60);
-	  } catch (InterruptedException ex) {
-	  }
-	}
+  private void runAnimations() {
+    Timer clouds = new Timer(60, new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent evt) {
+	moveCloud(e[0], 1, 800);
+	moveCloud(e[1], 2, 800);
+	moveCloud(e[2], -1, -e[2].getWidth());
       }
-    };
-    cloudThread.start();
+    });
 
-    Thread planetThread = new Thread() {
-      public void run() {
-	double pichia = Math.PI / 5;
-	double alpha = Math.PI * 3 / 2;
+    clouds.start();
 
-	while (true) {
+    Timer planets = new Timer(130, new ActionListener() {
+      double pichia = Math.PI / 5;
+      double alpha = Math.PI * 3 / 2;
 
-	  double y = e[3].getY();
-	  y = Math.cos(alpha) >= 0 ? y + Math.ceil(Math.cos(alpha + pichia))
-		  : y + Math.floor(Math.cos(alpha + pichia));
-	  alpha += pichia;
-	  e[3].setBounds(e[3].getX(), (int) y, e[3].getWidth(),
-		  e[3].getHeight());
-
-	  try {
-	    Thread.sleep(130);
-	  } catch (InterruptedException ex) {
-	  }
-	}
+      @Override
+      public void actionPerformed(ActionEvent evt) {
+	double y = e[3].getY();
+	y = Math.cos(alpha) >= 0 ? y + Math.ceil(Math.cos(alpha + pichia))
+		: y + Math.floor(Math.cos(alpha + pichia));
+	alpha += pichia;
+	e[3].setBounds(e[3].getX(), (int) y, e[3].getWidth(), e[3].getHeight());
       }
-    };
-    planetThread.start();
+    });
+
+    planets.start();
+  }
+
+  private void moveCloud(JLabel cloud, int dx, int resetX) {
+    int x = cloud.getX();
+    x += dx;
+
+    if ((dx > 0 && x >= resetX)) {
+      x = -cloud.getWidth();
+    } else if (dx < 0 && x <= resetX) {
+      x = Frame.WIDTH + cloud.getWidth();
+    }
+
+    cloud.setBounds(x, cloud.getY(), cloud.getWidth(), cloud.getHeight());
   }
 
   @Override
@@ -171,10 +146,5 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
     } else if (e.getSource() == quitBtn) {
       Frame.setQuitGame_trigger(true);
     }
-  }
-
-  @Override
-  protected void paintComponent(Graphics g) {
-    super.paintComponents(g);
   }
 }
