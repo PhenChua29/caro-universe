@@ -40,7 +40,7 @@ public class InfoPanel extends JPanelTemplate {
 
     playerInfo = new PlayerInfoPanel(player, false);
     botInfo = new PlayerInfoPanel(bot, true);
-
+    
     undoBtn = new JButtonTemplate();
     undoBtn.setIcon(new ImageIcon(getClass().getResource("/img/button/restore48.png")));
     undoBtn.setFocusPainted(false);
@@ -54,7 +54,7 @@ public class InfoPanel extends JPanelTemplate {
     buttonWrapper.add(Box.createVerticalGlue());
     buttonWrapper.add(undoBtn);
     buttonWrapper.add(Box.createVerticalGlue());
-    buttonWrapper.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
+    buttonWrapper.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
 
     mainLbl = new JLabel("");
     mainLbl.setFont(new Font("Ink Free", Font.BOLD, 52));
