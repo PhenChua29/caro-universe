@@ -34,8 +34,9 @@ public class Player extends Entity {
 
   @Override
   public void setScores(int score) {
-    super.setScores(score);
-    record.setTotalScore(record.getTotalScore() + (score - getScores()));
+    int difference = score - getScores();
+    super.setScores(getScores() + difference);
+    record.setTotalScore(record.getTotalScore() + difference);
   }
 
   @Override
