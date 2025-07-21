@@ -140,7 +140,7 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
     }
 
     for (int i = 0; i < button.length; ++i) {
-      final boolean isEmpty = button[i].getText().equals("") && button[i].getIcon() == null;
+      final boolean isEmpty = (button[i].getText() == null || button[i].getText().isEmpty()) && button[i].getIcon() == null;
       final boolean isSource = e.getSource() == button[i];
 
       if (isSource && isEmpty) {
