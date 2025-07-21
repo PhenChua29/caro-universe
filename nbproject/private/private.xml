@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/frame/Frame.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/elements/c3.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/object/Entity.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/App.java</file>
@@ -11,8 +12,10 @@
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/lib/JPanelTemplate.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/elements/move3.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/data/Record.java</file>
+            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/constants/Difficulty.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/elements/move4.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/bg/1.png</file>
+            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/panel/AboutUsPanel.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/panel/CreditPanel.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/elements/c1.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/constants/EntityType.java</file>
@@ -31,7 +34,6 @@
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/elements/move5.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/data/RecordManager.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/GameThread.java</file>
-            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/frame/frame.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/object/Player.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/panel/MenuPanel.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/elements/c2.png</file>

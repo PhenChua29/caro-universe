@@ -3,27 +3,27 @@ package frame;
 import java.awt.Color;
 import java.awt.Toolkit;
 import lib.JFrameTemplate;
-import panel.CreditPanel;
 import panel.EndGamePanel;
 import panel.InGamePanel;
 import panel.InfoPromptPanel;
 import panel.MenuPanel;
 import object.Bot;
 import object.Player;
+import panel.AboutUsPanel;
 
 public class Frame extends JFrameTemplate {
 
   public static final int WIDTH = 800;
-  
+
   public static final String menuPanel = "MenuPanel";
   public static final String inGamePanel = "InGamePanel";
   public static final String endGamePanel = "EndGamePanel";
-  public static final String creditPanel = "CreditPanel";
+  public static final String aboutUsPanel = "AboutUsPanel";
   public static final String infoPromptPanel = "InfoPromptPanel";
 
   private static boolean newGame_trigger = false;
   private static boolean quitGame_trigger = false;
-  private static boolean credit_trigger = false;
+  private static boolean aboutUs_trigger = false;
   private static boolean endGame_trigger = false;
   private static boolean menu_trigger = false;
   private static boolean info_prompt_trigger = false;
@@ -31,7 +31,7 @@ public class Frame extends JFrameTemplate {
   private MenuPanel MenuPanel;
   private InGamePanel InGamePanel;
   private EndGamePanel EndGamePanel;
-  private CreditPanel CreditPanel;
+  private AboutUsPanel AboutUsPanel;
   private InfoPromptPanel InfoPromptPanel;
 
   private Player currentPlayer;
@@ -62,8 +62,8 @@ public class Frame extends JFrameTemplate {
     EndGamePanel = new EndGamePanel();
     this.add(EndGamePanel);
 
-    CreditPanel = new CreditPanel();
-    this.add(CreditPanel);
+    AboutUsPanel = new AboutUsPanel();
+    this.add(AboutUsPanel);
 
     switchPanel(menuPanel);
   }
@@ -95,10 +95,10 @@ public class Frame extends JFrameTemplate {
       return;
     }
 
-    if (credit_trigger) {
-      switchPanel(creditPanel);
-      System.out.println("Switched into " + creditPanel);
-      setCredit_trigger(false);
+    if (aboutUs_trigger) {
+      switchPanel(aboutUsPanel);
+      System.out.println("Switched into " + aboutUsPanel);
+      setAboutUs_trigger(false);
       return;
     }
 
@@ -135,19 +135,19 @@ public class Frame extends JFrameTemplate {
     System.out.println(panel);
 
     if (panel.equals(menuPanel)) {
-      this.setContentPane(MenuPanel);
+      setContentPane(MenuPanel);
     } else if (panel.equals(infoPromptPanel)) {
-      this.setContentPane(InfoPromptPanel);
+      setContentPane(InfoPromptPanel);
     } else if (panel.equals(inGamePanel)) {
-      this.setContentPane(InGamePanel);
+      setContentPane(InGamePanel);
     } else if (panel.equals(endGamePanel)) {
-      this.setContentPane(EndGamePanel);
-    } else if (panel.equals(creditPanel)) {
-      this.setContentPane(CreditPanel);
+      setContentPane(EndGamePanel);
+    } else if (panel.equals(aboutUsPanel)) {
+      setContentPane(AboutUsPanel);
     }
 
-    this.repaint();
-    this.validate();
+    repaint();
+    validate();
   }
 
   /**
@@ -158,7 +158,7 @@ public class Frame extends JFrameTemplate {
    */
   public static boolean isStateChange() {
     return (newGame_trigger || info_prompt_trigger || quitGame_trigger
-	    || credit_trigger || endGame_trigger || menu_trigger);
+	    || aboutUs_trigger || endGame_trigger || menu_trigger);
   }
 
   // GETTERS & SETTERS
@@ -178,13 +178,12 @@ public class Frame extends JFrameTemplate {
     quitGame_trigger = QuitGame_trigger;
   }
 
-  public static boolean isCredit_trigger() {
-    return credit_trigger;
+  public static boolean isAboutUs_trigger() {
+    return aboutUs_trigger;
   }
 
-  public static void setCredit_trigger(boolean Credit_trigger) {
-    credit_trigger = Credit_trigger;
-    System.out.println("Credit_trigger set:" + isCredit_trigger());
+  public static void setAboutUs_trigger(boolean AboutUs_trigger) {
+    aboutUs_trigger = AboutUs_trigger;
   }
 
   public static boolean isEndGame_trigger() {
