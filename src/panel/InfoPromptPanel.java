@@ -36,6 +36,7 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
   private JRadioButton maleRadio;
   private JRadioButton femaleRadio;
   private JButtonTemplate confirmBtn;
+  private JButtonTemplate homeBtn;
   private ButtonGroup genderGroup;
   private Player player;
   private Bot bot;
@@ -62,6 +63,17 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
   }
 
   private void initComponents() {
+    homeBtn = new JButtonTemplate();
+    homeBtn.setIcon(new ImageIcon(getClass().getResource("/img/button/home.png")));
+    homeBtn.set(20, 20, 66, 72, "", Color.BLACK, Color.WHITE);
+    homeBtn.setFont(new Font("Ink Free", Font.PLAIN, 22));
+    homeBtn.setHorizontalTextPosition(SwingConstants.CENTER);
+    homeBtn.setStyling(false);
+    homeBtn.addActionListener(e -> {
+      Frame.setMenu_trigger(true);
+    });
+    add(homeBtn);
+
     JPanel content = new JPanel();
 
     content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
