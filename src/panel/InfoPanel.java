@@ -23,9 +23,9 @@ public class InfoPanel extends JPanelTemplate {
 
   private PlayerInfoPanel playerInfo;
   private PlayerInfoPanel botInfo;
-  private static JLabel label;
-  private JButtonTemplate undoButton;
-  private static JLabel timerLabel;
+  private static JLabel mainLbl;
+  private JButtonTemplate undoBtn;
+  private static JLabel timerLbl;
 
   private static Thread timerThread;
   private static volatile boolean stopTimer = false;
@@ -39,36 +39,36 @@ public class InfoPanel extends JPanelTemplate {
     playerInfo = new PlayerInfoPanel(player, false);
     botInfo = new PlayerInfoPanel(bot, true);
 
-    undoButton = new JButtonTemplate();
-    undoButton.setIcon(new ImageIcon(getClass().getResource("/img/button/restore48.png")));
-    undoButton.setFocusPainted(false);
-    undoButton.addActionListener((ActionEvent e) -> GamePanel.undoLastMove());
-    undoButton.setStyling(false);
-    undoButton.setPreferredSize(new Dimension(48, 53));
+    undoBtn = new JButtonTemplate();
+    undoBtn.setIcon(new ImageIcon(getClass().getResource("/img/button/restore48.png")));
+    undoBtn.setFocusPainted(false);
+    undoBtn.addActionListener((ActionEvent e) -> GamePanel.undoLastMove());
+    undoBtn.setStyling(false);
+    undoBtn.setPreferredSize(new Dimension(48, 53));
 
     JPanel buttonWrapper = new JPanel();
     buttonWrapper.setLayout(new BoxLayout(buttonWrapper, BoxLayout.Y_AXIS));
     buttonWrapper.setOpaque(false);
     buttonWrapper.add(Box.createVerticalGlue());
-    buttonWrapper.add(undoButton);
+    buttonWrapper.add(undoBtn);
     buttonWrapper.add(Box.createVerticalGlue());
     buttonWrapper.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
 
-    label = new JLabel("");
-    label.setFont(new Font("Ink Free", Font.BOLD, 52));
-    label.setForeground(Color.white);
-    label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+    mainLbl = new JLabel("");
+    mainLbl.setFont(new Font("Ink Free", Font.BOLD, 52));
+    mainLbl.setForeground(Color.white);
+    mainLbl.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
-    timerLabel = new JLabel("");
-    timerLabel.setFont(new Font("Arial", Font.PLAIN, 24));
-    timerLabel.setForeground(Color.WHITE);
-    timerLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+    timerLbl = new JLabel("");
+    timerLbl.setFont(new Font("Arial", Font.PLAIN, 24));
+    timerLbl.setForeground(Color.WHITE);
+    timerLbl.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
     JPanel labelPanel = new JPanel();
     labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.Y_AXIS));
     labelPanel.setOpaque(false);
-    labelPanel.add(label);
-    labelPanel.add(timerLabel);
+    labelPanel.add(mainLbl);
+    labelPanel.add(timerLbl);
     labelPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 52));
 
     JPanel centerPanel = new JPanel(new BorderLayout());
@@ -106,7 +106,7 @@ public class InfoPanel extends JPanelTemplate {
   }
 
   public static void setLabelText(String text) {
-    label.setText(text);
+    mainLbl.setText(text);
   }
 
   private static void startTimerThread() {
@@ -125,14 +125,14 @@ public class InfoPanel extends JPanelTemplate {
       SwingUtilities.invokeLater(() -> GamePanel.timerStartHandler());
 
       int seconds = countDownTime;
-      timerLabel.setVisible(true);
+      timerLbl.setVisible(true);
 
       while (seconds >= 0 && !stopTimer) {
 	final int currentSec = seconds;
 
 	SwingUtilities.invokeLater(() -> {
-	  timerLabel.setText("Timer: " + currentSec + "s");
-	  timerLabel.setForeground(currentSec <= 20 ? Color.RED : Color.WHITE);
+	  timerLbl.setText("Timer: " + currentSec + "s");
+	  timerLbl.setForeground(currentSec <= 20 ? Color.RED : Color.WHITE);
 	});
 
 	if (seconds == 0) {
@@ -154,7 +154,7 @@ public class InfoPanel extends JPanelTemplate {
 
   public static void resetTimerThread(boolean isToogleVisibility) {
     stopTimer = true;
-    timerLabel.setVisible(!isToogleVisibility);
+    timerLbl.setVisible(!isToogleVisibility);
 
     if (timerThread != null && timerThread.isAlive()) {
       timerThread.interrupt();

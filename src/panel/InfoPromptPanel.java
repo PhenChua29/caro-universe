@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import frame.frame;
+import frame.Frame;
 import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
 import lib.JButtonTemplate;
@@ -35,7 +35,7 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
 
   private JRadioButton maleRadio;
   private JRadioButton femaleRadio;
-  private JButtonTemplate confirmButton;
+  private JButtonTemplate confirmBtn;
   private ButtonGroup genderGroup;
   private Player player;
   private Bot bot;
@@ -139,16 +139,16 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
     confirmPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     confirmPanel.setOpaque(false);
 
-    confirmButton = new JButtonTemplate();
-    confirmButton.setIcon(new ImageIcon(getClass().getResource("/img/button/confirmBg.png")));
-    confirmButton.set(0, 0, 256, 60, "Confirm", Color.BLACK, Color.WHITE);
-    confirmButton.setMaximumSize(new Dimension(256, 60));
-    confirmButton.setFont(new Font("Ink Free", Font.PLAIN, 28));
-    confirmButton.setHorizontalTextPosition(SwingConstants.CENTER);
-    confirmButton.setStyling(false);
+    confirmBtn = new JButtonTemplate();
+    confirmBtn.setIcon(new ImageIcon(getClass().getResource("/img/button/confirmBg.png")));
+    confirmBtn.set(0, 0, 256, 60, "Confirm", Color.BLACK, Color.WHITE);
+    confirmBtn.setMaximumSize(new Dimension(256, 60));
+    confirmBtn.setFont(new Font("Ink Free", Font.PLAIN, 28));
+    confirmBtn.setHorizontalTextPosition(SwingConstants.CENTER);
+    confirmBtn.setStyling(false);
 
-    confirmButton.addActionListener(this);
-    confirmPanel.add(confirmButton);
+    confirmBtn.addActionListener(this);
+    confirmPanel.add(confirmBtn);
     content.add(confirmPanel);
 
     this.add(content);
@@ -160,7 +160,7 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
     imgBg.setBounds(0, 0, 800, 800);
     this.add(imgBg);
     this.setComponentZOrder(imgBg,
-        this.getComponentCount() - 1); // Send to back
+	    this.getComponentCount() - 1); // Send to back
   }
 
   private JLabel createLabel(String text, int fontSize) {
@@ -183,33 +183,33 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     String name = nameField.getText().trim();
     Genders gender = maleRadio.isSelected() ? Genders.MALE
-        : femaleRadio.isSelected() ? Genders.FEMALE
-        : null;
+	    : femaleRadio.isSelected() ? Genders.FEMALE
+	    : null;
 
     if (name.isEmpty() && gender == null) {
       JOptionPane.showMessageDialog(
-          this, "Please enter your name and select a gender.",
-          "Missing Information", JOptionPane.WARNING_MESSAGE);
+	      this, "Please enter your name and select a gender.",
+	      "Missing Information", JOptionPane.WARNING_MESSAGE);
       return;
     }
 
     if (name.isEmpty()) {
       JOptionPane.showMessageDialog(this, "Name field cannot be empty.",
-          "Missing Name",
-          JOptionPane.WARNING_MESSAGE);
+	      "Missing Name",
+	      JOptionPane.WARNING_MESSAGE);
       return;
     }
 
     if (gender == null) {
       JOptionPane.showMessageDialog(this, "Please select a gender.",
-          "Missing Gender",
-          JOptionPane.WARNING_MESSAGE);
+	      "Missing Gender",
+	      JOptionPane.WARNING_MESSAGE);
       return;
     }
 
     int matchCount = (Integer) matchCountBox.getSelectedItem();
-    Difficulty difficulty = (Difficulty) difficultyComboBox.getSelectedItem(); 
-    
+    Difficulty difficulty = (Difficulty) difficultyComboBox.getSelectedItem();
+
     player.setName(name);
     player.setGender(gender);
     player.loadRandomAvatar();
@@ -221,6 +221,6 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
 
     GamePanel.setTotalMatches(matchCount);
     InGamePanel.initNewGame();
-    frame.setNewGame_trigger(true);
+    Frame.setNewGame_trigger(true);
   }
 }

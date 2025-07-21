@@ -1,6 +1,6 @@
 package panel;
 
-import frame.frame;
+import frame.Frame;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -14,41 +14,41 @@ import lib.JPanelTemplate;
 
 public class MenuPanel extends JPanelTemplate implements ActionListener {
 
-  private JButtonTemplate newGameButton;
-  private JButtonTemplate creditButton;
-  private JButtonTemplate quitButton;
+  private JButtonTemplate newGameBtn;
+  private JButtonTemplate creditBtn;
+  private JButtonTemplate quitBtn;
 
   public MenuPanel() {
     this.set(0, 0, 800, 800, "null", Color.RED);
     System.out.println(this.getWidth() + "," + this.getHeight());
 
-    newGameButton = new JButtonTemplate();
-    newGameButton.setIcon(new ImageIcon(getClass().getResource("/img/button/blueLr.png")));
-    newGameButton.set(-80, 100, 400, 100, "   New game", Color.BLACK, Color.WHITE);
-    newGameButton.setFont(new Font("Ink Free", Font.PLAIN, 52));
-    newGameButton.setHorizontalTextPosition(SwingConstants.CENTER);
-    newGameButton.setStyling(false);
+    newGameBtn = new JButtonTemplate();
+    newGameBtn.setIcon(new ImageIcon(getClass().getResource("/img/button/blueLr.png")));
+    newGameBtn.set(-80, 100, 400, 100, "   New game", Color.BLACK, Color.WHITE);
+    newGameBtn.setFont(new Font("Ink Free", Font.PLAIN, 52));
+    newGameBtn.setHorizontalTextPosition(SwingConstants.CENTER);
+    newGameBtn.setStyling(false);
 
-    creditButton = new JButtonTemplate();
-    creditButton.set(550, 400, 365, 110, "About", Color.BLACK, Color.WHITE);
-    creditButton.setHorizontalAlignment(SwingConstants.LEFT);
-    creditButton.setStyling(false);
+    creditBtn = new JButtonTemplate();
+    creditBtn.set(550, 400, 365, 110, "About", Color.BLACK, Color.WHITE);
+    creditBtn.setHorizontalAlignment(SwingConstants.LEFT);
+    creditBtn.setStyling(false);
 
-    quitButton = new JButtonTemplate();
+    quitBtn = new JButtonTemplate();
 
-    quitButton.setImageBackground(new ImageIcon(getClass().getResource("/img/button/blueLr.png")).getImage());
-    quitButton.set(600, 585, 400, 100, "   Quit", Color.BLACK, Color.WHITE);
-    quitButton.setFont(new Font("Ink Free", Font.PLAIN, 48));
-    quitButton.setHorizontalAlignment(SwingConstants.LEFT);
-    quitButton.setStyling(false);
+    quitBtn.setImageBackground(new ImageIcon(getClass().getResource("/img/button/blueLr.png")).getImage());
+    quitBtn.set(600, 585, 400, 100, "   Quit", Color.BLACK, Color.WHITE);
+    quitBtn.setFont(new Font("Ink Free", Font.PLAIN, 48));
+    quitBtn.setHorizontalAlignment(SwingConstants.LEFT);
+    quitBtn.setStyling(false);
 
-    newGameButton.addActionListener(this);
-    creditButton.addActionListener(this);
-    quitButton.addActionListener(this);
+    newGameBtn.addActionListener(this);
+    creditBtn.addActionListener(this);
+    quitBtn.addActionListener(this);
 
-    this.add(newGameButton);
+    this.add(newGameBtn);
 //    this.add(creditButton);
-    this.add(quitButton);
+    this.add(quitBtn);
 
     JLabel bg = new JLabel();
     bg.setBounds(0, 0, 800, 800);
@@ -164,12 +164,12 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (e.getSource() == newGameButton) {
-      frame.setInfo_prompt_trigger(true);
-    } else if (e.getSource() == creditButton) {
-      frame.setCredit_trigger(true);
-    } else if (e.getSource() == quitButton) {
-      frame.setQuitGame_trigger(true);
+    if (e.getSource() == newGameBtn) {
+      Frame.setInfo_prompt_trigger(true);
+    } else if (e.getSource() == creditBtn) {
+      Frame.setCredit_trigger(true);
+    } else if (e.getSource() == quitBtn) {
+      Frame.setQuitGame_trigger(true);
     }
   }
 

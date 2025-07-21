@@ -1,18 +1,18 @@
-import frame.frame;
+import frame.Frame;
 
 public class GameThread extends Thread {
 
-    private frame Frame;
+    private Frame Frame;
 
     @Override
     public void run() {
         try {
-            Frame = new frame();
+            Frame = new Frame();
             for (;;) {
                 // create an inf loop for checking state: new game, credit, quit. Then trigger
                 // it using frame's method
                 GameThread.sleep(500);
-                if (frame.isStateChange()) {
+                if (Frame.isStateChange()) {
                     Frame.switchPanel();
                 }
             }

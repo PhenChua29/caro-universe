@@ -11,7 +11,7 @@ import panel.MenuPanel;
 import object.Bot;
 import object.Player;
 
-public class frame extends JFrameTemplate {
+public class Frame extends JFrameTemplate {
 
   public static final String menuPanel = "MenuPanel";
   public static final String inGamePanel = "InGamePanel";
@@ -35,7 +35,7 @@ public class frame extends JFrameTemplate {
   private Player currentPlayer;
   private Bot bot;
 
-  public frame() {
+  public Frame() {
     currentPlayer = new Player();
     bot = new Bot();
     bot.loadRandomMoveExcept(currentPlayer.loadRandomMove());

@@ -2,7 +2,7 @@ package panel;
 
 import constants.Difficulty;
 import data.Record;
-import frame.frame;
+import frame.Frame;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -218,7 +218,7 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
 	}
 	EndGamePanel.setMode(EndGamePanel.BTN_MODE.NEW_MATCH);
       }
-      frame.setEndGame_trigger(true);
+      Frame.setEndGame_trigger(true);
       return;
     }
 
@@ -227,7 +227,7 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
       player.increaseTotalGames();
       bot.increaseScore();
       recordManager.update(player.getRecord());
-      frame.setEndGame_trigger(true);
+      Frame.setEndGame_trigger(true);
 
       if (shouldPlayNextMatch()) {
 	EndGamePanel.setText("We have a tie in this round!");
@@ -372,7 +372,7 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
   }
 
   // Getter & Setter
-  public static boolean ishumanTurn() {
+  public static boolean isHumanTurn() {
     return humanTurn;
   }
 

@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import frame.frame;
+import frame.Frame;
 import lib.JButtonTemplate;
 
 public class EndGamePanel extends JPanel implements ActionListener {
@@ -20,7 +20,6 @@ public class EndGamePanel extends JPanel implements ActionListener {
     NEW_MATCH
   }
 
-  private static BTN_MODE mode;
   private static JButtonTemplate newGameBtn;
   private static JButtonTemplate nextMatchBtn;
   private JButtonTemplate homeBtn;
@@ -39,8 +38,6 @@ public class EndGamePanel extends JPanel implements ActionListener {
     this.setBackground(Color.BLACK);
     this.setOpaque(true);
     this.setBounds(0, 0, 800, 800);
-
-    mode = BTN_MODE.NEW_MATCH;
   }
 
   private void init_button() {
@@ -98,8 +95,6 @@ public class EndGamePanel extends JPanel implements ActionListener {
   }
 
   public static void setMode(BTN_MODE newMode) {
-    mode = newMode;
-
     switch (newMode) {
       case NEXT_MATCH:
 	newGameBtn.setVisible(false);
@@ -119,19 +114,19 @@ public class EndGamePanel extends JPanel implements ActionListener {
     if (e.getSource().equals(newGameBtn)) {
       InGamePanel.initNewGame();
       System.out.println("New game btn pressed");
-      frame.setNewGame_trigger(true);
+      Frame.setNewGame_trigger(true);
       return;
     }
 
     if (e.getSource().equals(nextMatchBtn)) {
       InGamePanel.nextMatch();
       System.out.println("Next match btn pressed");
-      frame.setNewGame_trigger(true);
+      Frame.setNewGame_trigger(true);
       return;
     }
 
     if (e.getSource().equals(homeBtn)) {
-      frame.setMenu_trigger(true);
+      Frame.setMenu_trigger(true);
     }
   }
 }
