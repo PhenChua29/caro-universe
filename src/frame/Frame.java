@@ -174,7 +174,7 @@ public class Frame extends JFrameTemplate {
 
   public static boolean isStateChange() {
     return (newGame_trigger || info_prompt_trigger || quitGame_trigger
-	    || aboutUs_trigger || endGame_trigger || menu_trigger || instruction_trigger || leaderboard_trigger);
+        || aboutUs_trigger || endGame_trigger || menu_trigger || instruction_trigger || leaderboard_trigger);
   }
 
   public static boolean isNewGame_trigger() {
