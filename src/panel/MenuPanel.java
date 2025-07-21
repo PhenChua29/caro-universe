@@ -3,7 +3,6 @@ package panel;
 import frame.Frame;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -16,7 +15,7 @@ import lib.JPanelTemplate;
 public class MenuPanel extends JPanelTemplate implements ActionListener {
 
   private JButtonTemplate newGameBtn;
-  private JButtonTemplate creditBtn;
+  private JButtonTemplate aboutBtn;
   private JButtonTemplate quitBtn;
 
   public MenuPanel() {
@@ -30,10 +29,13 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
     newGameBtn.setHorizontalTextPosition(SwingConstants.CENTER);
     newGameBtn.setStyling(false);
 
-    creditBtn = new JButtonTemplate();
-    creditBtn.set(550, 400, 365, 110, "About", Color.BLACK, Color.WHITE);
-    creditBtn.setHorizontalAlignment(SwingConstants.LEFT);
-    creditBtn.setStyling(false);
+    aboutBtn = new JButtonTemplate();
+
+    aboutBtn.setImageBackground(new ImageIcon(getClass().getResource("/img/button/blueLr.png")).getImage());
+    aboutBtn.set(540, 440, 400, 110, "  About Us", Color.BLACK, Color.WHITE);
+    aboutBtn.setFont(new Font("Ink Free", Font.PLAIN, 48));
+    aboutBtn.setHorizontalAlignment(SwingConstants.LEFT);
+    aboutBtn.setStyling(false);
 
     quitBtn = new JButtonTemplate();
 
@@ -44,11 +46,11 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
     quitBtn.setStyling(false);
 
     newGameBtn.addActionListener(this);
-    creditBtn.addActionListener(this);
+    aboutBtn.addActionListener(this);
     quitBtn.addActionListener(this);
 
     this.add(newGameBtn);
-    // TODO: Add creditButton to the panel when the feature is implemented.
+    this.add(aboutBtn);
     this.add(quitBtn);
 
     JLabel bg = new JLabel();
@@ -141,8 +143,8 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == newGameBtn) {
       Frame.setInfo_prompt_trigger(true);
-    } else if (e.getSource() == creditBtn) {
-      Frame.setCredit_trigger(true);
+    } else if (e.getSource() == aboutBtn) {
+      Frame.setAboutUs_trigger(true);
     } else if (e.getSource() == quitBtn) {
       Frame.setQuitGame_trigger(true);
     }
