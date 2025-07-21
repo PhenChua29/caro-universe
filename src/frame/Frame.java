@@ -9,6 +9,7 @@ import panel.InfoPromptPanel;
 import panel.MenuPanel;
 import panel.AboutUsPanel;
 import panel.InstructionPanel;
+import panel.LeaderboardPanel;
 import object.Bot;
 import object.Player;
 
@@ -22,6 +23,7 @@ public class Frame extends JFrameTemplate {
   public static final String instructionPanel = "InstructionPanel";
   public static final String aboutUsPanel = "AboutUsPanel";
   public static final String infoPromptPanel = "InfoPromptPanel";
+  public static final String leaderboardPanel = "LeaderboardPanel";
 
   private static boolean newGame_trigger = false;
   private static boolean quitGame_trigger = false;
@@ -30,6 +32,7 @@ public class Frame extends JFrameTemplate {
   private static boolean endGame_trigger = false;
   private static boolean menu_trigger = false;
   private static boolean info_prompt_trigger = false;
+  private static boolean leaderboard_trigger = false;
 
   private MenuPanel MenuPanel;
   private InGamePanel InGamePanel;
@@ -37,6 +40,7 @@ public class Frame extends JFrameTemplate {
   private InstructionPanel InstructionPanel;
   private AboutUsPanel AboutUsPanel;
   private InfoPromptPanel InfoPromptPanel;
+  private LeaderboardPanel LeaderboardPanel;
 
   private Player currentPlayer;
   private Bot bot;
@@ -72,12 +76,12 @@ public class Frame extends JFrameTemplate {
     AboutUsPanel = new AboutUsPanel();
     this.add(AboutUsPanel);
 
+    LeaderboardPanel = new LeaderboardPanel();
+    this.add(LeaderboardPanel);
+
     switchPanel(menuPanel);
   }
 
-  /**
-   * Methods for switching panel depends on states.
-   */
   public void switchPanel() {
     if (newGame_trigger) {
       InGamePanel.update();
@@ -123,6 +127,13 @@ public class Frame extends JFrameTemplate {
       return;
     }
 
+    if (leaderboard_trigger) {
+      System.out.println("Switched into " + leaderboardPanel);
+      switchPanel(leaderboardPanel);
+      setLeaderboard_trigger(false);
+      return;
+    }
+
     if (menu_trigger) {
       System.out.println("Switched into " + menuPanel);
       switchPanel(menuPanel);
@@ -138,13 +149,6 @@ public class Frame extends JFrameTemplate {
     }
   }
 
-  /**
-   * A method for switching panel depends on states: new game, credit, quit, end
-   * game
-   *
-   * @param panel A {@code String} that has the JPanel's name(predefined inside
-   * of this class).
-   */
   private void switchPanel(String panel) {
     System.out.println(panel);
 
@@ -160,24 +164,19 @@ public class Frame extends JFrameTemplate {
       setContentPane(AboutUsPanel);
     } else if (panel.equals(instructionPanel)) {
       setContentPane(InstructionPanel);
+    } else if (panel.equals(leaderboardPanel)) {
+      setContentPane(LeaderboardPanel);
     }
 
     repaint();
     validate();
   }
 
-  /**
-   * Switch to another panel if state change
-   *
-   * @return {@code true} if there is a change in an of the states,
-   * {@code false} otherwise
-   */
   public static boolean isStateChange() {
     return (newGame_trigger || info_prompt_trigger || quitGame_trigger
-        || aboutUs_trigger || endGame_trigger || menu_trigger || instruction_trigger);
+	    || aboutUs_trigger || endGame_trigger || menu_trigger || instruction_trigger || leaderboard_trigger);
   }
 
-  // GETTERS & SETTERS
   public static boolean isNewGame_trigger() {
     return newGame_trigger;
   }
@@ -228,5 +227,13 @@ public class Frame extends JFrameTemplate {
 
   public static void setInfo_prompt_trigger(boolean Info_prompt_trigger) {
     info_prompt_trigger = Info_prompt_trigger;
+  }
+
+  public static boolean isLeaderboard_trigger() {
+    return leaderboard_trigger;
+  }
+
+  public static void setLeaderboard_trigger(boolean Leaderboard_trigger) {
+    leaderboard_trigger = Leaderboard_trigger;
   }
 }

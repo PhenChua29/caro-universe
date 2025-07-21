@@ -18,6 +18,7 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
   private JButtonTemplate howToPlayBtn;
   private JButtonTemplate aboutBtn;
   private JButtonTemplate quitBtn;
+  private JButtonTemplate leaderboardBtn;
 
   public MenuPanel() {
     this.set(0, 0, 800, 800, "null", Color.RED);
@@ -30,6 +31,13 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
     newGameBtn.setHorizontalTextPosition(SwingConstants.CENTER);
     newGameBtn.setStyling(false);
 
+    leaderboardBtn = new JButtonTemplate();
+    leaderboardBtn.setImageBackground(new ImageIcon(getClass().getResource("/img/button/blueLr.png")).getImage());
+    leaderboardBtn.set(-40, 250, 390, 100, "   Leaderboard", Color.BLACK, Color.WHITE);
+    leaderboardBtn.setFont(new Font("Ink Free", Font.PLAIN, 48));
+    leaderboardBtn.setHorizontalAlignment(SwingConstants.LEFT);
+    leaderboardBtn.setStyling(false);
+
     howToPlayBtn = new JButtonTemplate();
     howToPlayBtn.setImageBackground(new ImageIcon(getClass().getResource("/img/button/blueLr.png")).getImage());
     howToPlayBtn.set(450, 310, 400, 110, "  How to Play", Color.BLACK, Color.WHITE);
@@ -38,7 +46,6 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
     howToPlayBtn.setStyling(false);
 
     aboutBtn = new JButtonTemplate();
-
     aboutBtn.setImageBackground(new ImageIcon(getClass().getResource("/img/button/blueLr.png")).getImage());
     aboutBtn.set(540, 460, 400, 110, "  About Us", Color.BLACK, Color.WHITE);
     aboutBtn.setFont(new Font("Ink Free", Font.PLAIN, 48));
@@ -46,7 +53,6 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
     aboutBtn.setStyling(false);
 
     quitBtn = new JButtonTemplate();
-
     quitBtn.setImageBackground(new ImageIcon(getClass().getResource("/img/button/blueLr.png")).getImage());
     quitBtn.set(600, 610, 400, 100, "   Quit", Color.BLACK, Color.WHITE);
     quitBtn.setFont(new Font("Ink Free", Font.PLAIN, 48));
@@ -54,11 +60,13 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
     quitBtn.setStyling(false);
 
     newGameBtn.addActionListener(this);
+    leaderboardBtn.addActionListener(this);
     howToPlayBtn.addActionListener(this);
     aboutBtn.addActionListener(this);
     quitBtn.addActionListener(this);
 
     this.add(newGameBtn);
+    this.add(leaderboardBtn);
     this.add(howToPlayBtn);
     this.add(aboutBtn);
     this.add(quitBtn);
@@ -111,9 +119,9 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
     Timer clouds = new Timer(60, new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent evt) {
-	moveCloud(e[0], 1, 800);
-	moveCloud(e[1], 2, 800);
-	moveCloud(e[2], -1, -e[2].getWidth());
+        moveCloud(e[0], 1, 800);
+        moveCloud(e[1], 2, 800);
+        moveCloud(e[2], -1, -e[2].getWidth());
       }
     });
 
@@ -125,11 +133,11 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
 
       @Override
       public void actionPerformed(ActionEvent evt) {
-	double y = e[3].getY();
-	y = Math.cos(alpha) >= 0 ? y + Math.ceil(Math.cos(alpha + pichia))
-		: y + Math.floor(Math.cos(alpha + pichia));
-	alpha += pichia;
-	e[3].setBounds(e[3].getX(), (int) y, e[3].getWidth(), e[3].getHeight());
+        double y = e[3].getY();
+        y = Math.cos(alpha) >= 0 ? y + Math.ceil(Math.cos(alpha + pichia))
+            : y + Math.floor(Math.cos(alpha + pichia));
+        alpha += pichia;
+        e[3].setBounds(e[3].getX(), (int) y, e[3].getWidth(), e[3].getHeight());
       }
     });
 
@@ -153,6 +161,8 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == newGameBtn) {
       Frame.setInfo_prompt_trigger(true);
+    } else if (e.getSource() == leaderboardBtn) {
+      Frame.setLeaderboard_trigger(true);
     } else if (e.getSource() == aboutBtn) {
       Frame.setAboutUs_trigger(true);
     } else if (e.getSource() == quitBtn) {
