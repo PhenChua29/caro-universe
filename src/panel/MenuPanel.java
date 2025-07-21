@@ -36,7 +36,6 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
     aboutBtn.setFont(new Font("Ink Free", Font.PLAIN, 48));
     aboutBtn.setHorizontalAlignment(SwingConstants.LEFT);
     aboutBtn.setStyling(false);
-    aboutBtn.addActionListener(this);
 
     quitBtn = new JButtonTemplate();
 
