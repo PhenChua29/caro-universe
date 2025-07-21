@@ -1,0 +1,61 @@
+package lib;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.io.File;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.swing.JPanel;
+
+public class JPanelTemplate extends JPanel {
+
+  // FULL
+  public void set(int x, int y, int width, int height, String layoutManager, Color color) {
+    this.setBounds(x, y, width, height);
+    this.setBackground(color);
+    this.setOpaque(false);
+    this.setVisible(true);
+
+    if (layoutManager.equals("BorderLayout")) {
+      this.setLayout(new BorderLayout());
+    } else {
+      this.setLayout(null);
+
+    }
+  }
+
+  // #2
+  public void set(int x, int y, int width, int height, Color color) {
+    this.setLayout(null);
+    this.setBounds(x, y, width, height);
+    this.setBackground(color);
+    this.setOpaque(false);
+    this.setVisible(true);
+  }
+
+  // #3
+  public void set(int width, int height, Color color) {
+    this.setLayout(null);
+    this.setPreferredSize(new Dimension(width, height));
+    this.setBackground(color);
+    this.setOpaque(false);
+    this.setVisible(true);
+  }
+
+  public void playSound(String soundName) {
+    String filePath = String.format("../audio/%s.wav", soundName);
+
+    try {
+      AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+      Clip clip = AudioSystem.getClip();
+      clip.open(audioInputStream);
+      clip.start();
+    } catch (Exception ex) {
+      System.out.println("Error with playing sound.");
+      ex.printStackTrace();
+    }
+  }
+}
