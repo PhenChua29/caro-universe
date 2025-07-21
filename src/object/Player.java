@@ -6,7 +6,6 @@ import data.Record;
 import data.RecordManager;
 import java.util.Random;
 import javax.swing.ImageIcon;
-import panel.GamePanel;
 
 /**
  * The human player.
