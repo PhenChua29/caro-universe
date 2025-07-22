@@ -87,7 +87,9 @@ public class Bot extends Entity {
     }
 
     HashMap<Integer, List<Move>> playerThreats = findStreaks(board, size, GamePanel.PLAYER);
-    for (int i = 4; i >= 3; i--) {
+    final int minThreshold = GamePanel.WIN_CONDITION - 2 < 2 ? 2 : GamePanel.WIN_CONDITION - 2;
+
+    for (int i = GamePanel.WIN_CONDITION - 1; i >= minThreshold; i--) {
       if (playerThreats.containsKey(i)) {
 	List<Move> blocks = playerThreats.get(i);
 	return blocks.get(new Random().nextInt(blocks.size()));
@@ -95,6 +97,7 @@ public class Bot extends Entity {
     }
 
     HashMap<Integer, List<Move>> botStreaks = findStreaks(board, size, GamePanel.BOT);
+
     if (botStreaks.isEmpty()) {
       int index = emptyCells.get(new Random().nextInt(emptyCells.size()));
       return new Move(index / size, index % size);
@@ -153,9 +156,6 @@ public class Bot extends Entity {
 	if (afterRow >= 0 && afterRow < size && afterCol >= 0 && afterCol < size && board[afterRow][afterCol] == 0) {
 	  viableMoves.computeIfAbsent(count, k -> new ArrayList<>()).add(new Move(afterRow, afterCol));
 	}
-
-	row = currentRow;
-	col = currentCol;
       }
     }
   }
@@ -189,7 +189,7 @@ public class Bot extends Entity {
 
     if (isMax) {
       int best = Integer.MIN_VALUE;
-      
+
       for (int r = 0; r < GamePanel.BOARD_SIZE; r++) {
 	for (int c = 0; c < GamePanel.BOARD_SIZE; c++) {
 	  if (board[r][c] == 0) {
@@ -206,7 +206,7 @@ public class Bot extends Entity {
       return best;
     } else {
       int best = Integer.MAX_VALUE;
-      
+
       for (int r = 0; r < GamePanel.BOARD_SIZE; r++) {
 	for (int c = 0; c < GamePanel.BOARD_SIZE; c++) {
 	  if (board[r][c] == 0) {
@@ -241,29 +241,103 @@ public class Bot extends Entity {
 
   private int evaluateLines(int[][] board, int player) {
     int score = 0;
-    int[][] directions = {{0, 1}, {1, 0}, {1, 1}, {1, -1}};
 
-    for (int r = 0; r < GamePanel.BOARD_SIZE; r++) {
-      for (int c = 0; c < GamePanel.BOARD_SIZE; c++) {
-	for (int[] dir : directions) {
-	  int i = 0;
-	  for (; i < 5; i++) {
-	    int nr = r + dir[0] * i;
-	    int nc = c + dir[1] * i;
-	    if (nr < 0 || nr >= GamePanel.BOARD_SIZE || nc < 0 || nc >= GamePanel.BOARD_SIZE || board[nr][nc] != player) {
+    final int[][] DIRECTIONS = {
+      {0, 1}, // Horizontal
+      {1, 0}, // Vertical
+      {1, 1}, // Diagonal \
+      {1, -1} // Diagonal /
+    };
+
+    final int WIN = 1_000_000;
+    final int WIN_COND = GamePanel.WIN_CONDITION;
+    final int SIZE = GamePanel.BOARD_SIZE;
+    final int EMPTY = 0;
+    final int CENTER = SIZE / 2;
+    final float FORGETFULNESS = 0.15f;
+
+    final boolean forgetCenterPos = Math.random() < FORGETFULNESS;
+    final boolean forgetWinCondition = Math.random() < FORGETFULNESS;
+    final boolean forgetLeapTrap = Math.random() < FORGETFULNESS;
+    final boolean forgetDoubleOpenThreat = Math.random() < FORGETFULNESS;
+
+    for (int row = 0; row < SIZE; row++) {
+      for (int col = 0; col < SIZE; col++) {
+
+	if (board[row][col] != player) {
+	  continue;
+	}
+
+	if (!forgetCenterPos) {
+	  int centerDistance = Math.abs(row - CENTER) + Math.abs(col - CENTER);
+	  score += (SIZE - centerDistance);
+	}
+
+	for (int[] dir : DIRECTIONS) {
+	  int streakLength = 0;
+
+	  while (streakLength < WIN_COND) {
+	    int r = row + dir[0] * streakLength;
+	    int c = col + dir[1] * streakLength;
+
+	    if (r < 0 || r >= SIZE || c < 0 || c >= SIZE || board[r][c] != player) {
 	      break;
 	    }
+
+	    streakLength++;
 	  }
-	  if (i == 5) {
-	    return 100000; // Win
+
+	  if (!forgetWinCondition && streakLength == WIN_COND) {
+	    return WIN;
 	  }
-	  if (i >= 2) {
-	    score += Math.pow(10, i);
+
+	  if (streakLength >= 2) {
+	    int beforeRow = row - dir[0];
+	    int beforeCol = col - dir[1];
+	    int afterRow = row + dir[0] * streakLength;
+	    int afterCol = col + dir[1] * streakLength;
+
+	    boolean openStart = beforeRow >= 0 && beforeCol >= 0 && beforeRow < SIZE && beforeCol < SIZE
+		    && board[beforeRow][beforeCol] == EMPTY;
+	    boolean openEnd = afterRow >= 0 && afterCol >= 0 && afterRow < SIZE && afterCol < SIZE
+		    && board[afterRow][afterCol] == EMPTY;
+
+	    double streakScore = Math.pow(10, streakLength);
+	    if (openStart && openEnd) {
+	      streakScore *= 2;
+	    } else if (!openStart && !openEnd) {
+	      streakScore = Math.pow(10, streakLength - 1);
+	    }
+
+	    score += streakScore;
+
+	    // Detect leap traps like x _ x x or x x _ x
+	    if (!forgetLeapTrap) {
+	      int gapRow = row + dir[0] * (streakLength + 1);
+	      int gapCol = col + dir[1] * (streakLength + 1);
+	      int gapMidRow = row + dir[0];
+	      int gapMidCol = col + dir[1];
+
+	      if (gapRow >= 0 && gapRow < SIZE && gapCol >= 0 && gapCol < SIZE
+		      && board[gapRow][gapCol] == player
+		      && board[gapMidRow][gapMidCol] == EMPTY) {
+		score += 800; // Bonus for leap pattern
+	      }
+	    }
+
+	    // Detect potential double open-end win threat: x _ x _ x
+	    if (!forgetDoubleOpenThreat) {
+	      int aheadRow = afterRow + dir[0];
+	      int aheadCol = afterCol + dir[1];
+	      if (openStart && openEnd && aheadRow >= 0 && aheadCol >= 0 && aheadRow < SIZE && aheadCol < SIZE
+		      && board[aheadRow][aheadCol] == EMPTY && streakLength == WIN_COND - 2) {
+		score += 3000; // Critical threat
+	      }
+	    }
 	  }
 	}
       }
     }
-
     return score;
   }
 }

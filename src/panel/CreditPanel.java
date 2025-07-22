@@ -1,5 +1,6 @@
 package panel;
 
+import constants.PanelType;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -58,6 +59,6 @@ public class CreditPanel extends JPanel implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    Frame.setMenu_trigger(true);
+    Frame.switchPanel(PanelType.MENU);
   }
 }

@@ -1,5 +1,6 @@
 package panel;
 
+import constants.PanelType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import frame.Frame;
@@ -129,13 +130,13 @@ public class AboutUsPanel extends JPanel implements ActionListener {
     gbc.gridy = 3;
     gbc.gridx = 0;
     gridPanel.add(createMember(
-	    "<html><b>Nguyễn Phi Long</b><br><font size='3' color='gray'>CE170669 - Leader</font></html>",
+	    "<html><b>Nguyễn Phi Long</b><br><font size='3' color='gray'>CE170669 - <b><font color='#fdba14'>Leader</font></b></font></html>",
 	    "/img/about/long.jpg"
     ), gbc);
 
     gbc.gridx = 1;
     gridPanel.add(createMember(
-	    "<html><b>Trần Đức Toàn</b><br><font size='3' color='gray'>CE191605 - Secretary</font></html>",
+	    "<html><b>Trần Đức Toàn</b><br><font size='3' color='gray'>CE191605 - <b><font color='red'>Secretary</font></b></font></html>",
 	    "/img/about/toan.jpg"
     ), gbc);
 
@@ -213,7 +214,7 @@ public class AboutUsPanel extends JPanel implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == returnButton) {
-      Frame.setMenu_trigger(true);
+      Frame.switchPanel(PanelType.MENU);
     }
   }
 }

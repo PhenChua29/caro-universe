@@ -1,6 +1,7 @@
 package panel;
 
 import constants.Difficulty;
+import constants.PanelType;
 import data.Record;
 import frame.Frame;
 import java.awt.Color;
@@ -21,12 +22,14 @@ import object.Player;
 import data.RecordManager;
 import java.util.ArrayList;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 public class GamePanel extends JPanelTemplate implements ActionListener {
 
   public static final int BOARD_SIZE = 5;
   public static final int PLAYER = 1;
   public static final int BOT = 2;
+  public static final int WIN_CONDITION = 4;
 
   private static final JButtonTemplate[] button = new JButtonTemplate[BOARD_SIZE * BOARD_SIZE];
   private static boolean humanTurn;
@@ -36,6 +39,7 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
 
   private static Player player;
   private static Bot bot;
+  private static boolean isBotThinking;
 
   private static int totalMatches;
   private static int matchCounts;
@@ -56,6 +60,7 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
     undoCount = 0;
     playing_history = new int[BOARD_SIZE][BOARD_SIZE];
     moveHistory = new Stack<>();
+    isBotThinking = false;
 
     initgamePanel();
     initTurn();
@@ -111,6 +116,11 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
   }
 
   public static void updateRoundText() {
+    if (totalMatches == 1) {
+      InfoPanel.setLabelText("Final round!");
+      return;
+    }
+
     if (shouldPlayNextMatch()) {
       InfoPanel.setLabelText(String.format("Round %d", matchCounts));
     } else {
@@ -218,7 +228,7 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
 	}
 	EndGamePanel.setMode(EndGamePanel.BTN_MODE.NEW_MATCH);
       }
-      Frame.setEndGame_trigger(true);
+      gameOver();
       return;
     }
 
@@ -227,7 +237,6 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
       player.increaseTotalGames();
       bot.increaseScore();
       recordManager.update(player.getRecord());
-      Frame.setEndGame_trigger(true);
 
       if (shouldPlayNextMatch()) {
 	EndGamePanel.setText("We have a tie in this round!");
@@ -236,7 +245,20 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
 	EndGamePanel.setText("We have a tie!");
 	EndGamePanel.setMode(EndGamePanel.BTN_MODE.NEW_MATCH);
       }
+
+      gameOver();
     }
+  }
+
+  private static void gameOver() {
+    new Timer(1000, e -> {
+      Frame.switchPanel(PanelType.END_GAME);
+    }) {
+      {
+	setRepeats(false);
+	start();
+      }
+    };
   }
 
   public static void undoLastMove() {
@@ -296,17 +318,26 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
   }
 
   private static int horizontalCheck() {
+    if (player_win != 0) {
+      return 1;
+    }
+
     for (int i = 0; i < BOARD_SIZE; ++i) {
-      for (int j = 0; j < BOARD_SIZE - 1; j++) {
-	if (playing_history[i][j] == 0 || playing_history[i][j + 1] == 0) {
-	  break;
-	}
-	if (playing_history[i][j] != playing_history[i][j + 1]) {
-	  break;
-	}
-	if (j == BOARD_SIZE - 2) {
-	  player_win = playing_history[i][j];
-	  return 1;
+      int count = 1;
+
+      for (int j = 1; j < BOARD_SIZE; j++) {
+	final int current = playing_history[i][j];
+	final int prev = playing_history[i][j - 1];
+
+	if (current != 0 && current == prev) {
+	  ++count;
+
+	  if (count == WIN_CONDITION) {
+	    player_win = current;
+	    return 1;
+	  }
+	} else {
+	  count = 1;
 	}
       }
     }
@@ -314,17 +345,26 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
   }
 
   private static int verticalCheck() {
+    if (player_win != 0) {
+      return 1;
+    }
+
     for (int i = 0; i < BOARD_SIZE; ++i) {
-      for (int j = 0; j < BOARD_SIZE - 1; j++) {
-	if (playing_history[j][i] == 0 || playing_history[j + 1][i] == 0) {
-	  break;
-	}
-	if (playing_history[j][i] != playing_history[j + 1][i]) {
-	  break;
-	}
-	if (j == BOARD_SIZE - 2) {
-	  player_win = playing_history[j][i];
-	  return 1;
+      int count = 1;
+
+      for (int j = 1; j < BOARD_SIZE; j++) {
+	final int current = playing_history[j][i];
+	final int prev = playing_history[j - 1][i];
+
+	if (current != 0 && current == prev) {
+	  ++count;
+
+	  if (count == WIN_CONDITION) {
+	    player_win = current;
+	    return 1;
+	  }
+	} else {
+	  count = 1;
 	}
       }
     }
@@ -332,31 +372,51 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
   }
 
   private static int XCheck() {
-    for (int i = 1; i < BOARD_SIZE; i++) {
-      if (playing_history[i][i] == 0
-	      || playing_history[i - 1][i - 1] != playing_history[i][i]) {
-	break;
-      }
-      if (i == BOARD_SIZE - 1) {
-	player_win = playing_history[i][i];
-	return 1;
+    if (player_win != 0) {
+      return 1;
+    }
+
+    // Check all "\" diagonals
+    for (int i = 0; i <= BOARD_SIZE - WIN_CONDITION; i++) {
+      for (int j = 0; j <= BOARD_SIZE - WIN_CONDITION; j++) {
+	int count = 1;
+
+	for (int k = 1; k < WIN_CONDITION; k++) {
+	  final int current = playing_history[i + k][j + k];
+	  final int prev = playing_history[i + k - 1][j + k - 1];
+
+	  if (current != 0 && current == prev) {
+	    count++;
+	    if (count == WIN_CONDITION) {
+	      player_win = current;
+	      return 1;
+	    }
+	  } else {
+	    break;
+	  }
+	}
       }
     }
 
-    for (int i = 1; i < BOARD_SIZE; i++) {
-      int prevRow = i - 1;
-      int prevCol = BOARD_SIZE - i;
-      int currRow = i;
-      int currCol = BOARD_SIZE - 1 - i;
+    // Check all "/" diagonals
+    for (int i = 0; i <= BOARD_SIZE - WIN_CONDITION; i++) {
+      for (int j = WIN_CONDITION - 1; j < BOARD_SIZE; j++) {
+	int count = 1;
 
-      if (playing_history[currRow][currCol] == 0
-	      || playing_history[prevRow][prevCol] != playing_history[currRow][currCol]) {
-	break;
-      }
+	for (int k = 1; k < WIN_CONDITION; k++) {
+	  final int current = playing_history[i + k][j - k];
+	  final int prev = playing_history[i + k - 1][j - k + 1];
 
-      if (i == BOARD_SIZE - 1) {
-	player_win = playing_history[currRow][currCol];
-	return 1;
+	  if (current != 0 && current == prev) {
+	    count++;
+	    if (count == WIN_CONDITION) {
+	      player_win = current;
+	      return 1;
+	    }
+	  } else {
+	    break;
+	  }
+	}
       }
     }
 
@@ -427,9 +487,10 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
   }
 
   public static void timerStartHandler() {
-    if (!humanTurn) {
+    if (!humanTurn && !isBotThinking) {
       new Thread(() -> {
 	try {
+	  isBotThinking = true;
 	  Difficulty difficulty = bot.getDifficulty();
 	  float factor = 1;
 
@@ -451,6 +512,7 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
 
 	SwingUtilities.invokeLater(() -> {
 	  handleBotTurn();
+	  isBotThinking = false;
 	});
       }).start();
     }

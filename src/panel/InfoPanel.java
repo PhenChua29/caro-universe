@@ -54,10 +54,9 @@ public class InfoPanel extends JPanelTemplate {
     buttonWrapper.add(Box.createVerticalGlue());
     buttonWrapper.add(undoBtn);
     buttonWrapper.add(Box.createVerticalGlue());
-    buttonWrapper.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
 
     mainLbl = new JLabel("");
-    mainLbl.setFont(new Font("Ink Free", Font.BOLD, 52));
+    mainLbl.setFont(new Font("Ink Free", Font.BOLD, 42));
     mainLbl.setForeground(Color.white);
     mainLbl.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 

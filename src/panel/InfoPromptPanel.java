@@ -2,6 +2,7 @@ package panel;
 
 import constants.Difficulty;
 import constants.Genders;
+import constants.PanelType;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -70,7 +71,7 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
     homeBtn.setHorizontalTextPosition(SwingConstants.CENTER);
     homeBtn.setStyling(false);
     homeBtn.addActionListener(e -> {
-      Frame.setMenu_trigger(true);
+      Frame.switchPanel(PanelType.MENU);
     });
     add(homeBtn);
 
@@ -233,6 +234,6 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
 
     GamePanel.setTotalMatches(matchCount);
     InGamePanel.initNewGame();
-    Frame.setNewGame_trigger(true);
+    Frame.switchPanel(PanelType.IN_GAME);
   }
 }
