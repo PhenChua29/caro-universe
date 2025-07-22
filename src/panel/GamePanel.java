@@ -117,7 +117,7 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
 
   public static void updateRoundText() {
     if (totalMatches == 1) {
-      InfoPanel.setLabelText(String.format("Final round!", matchCounts));
+      InfoPanel.setLabelText("Final round!");
       return;
     }
 
