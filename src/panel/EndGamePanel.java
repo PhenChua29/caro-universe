@@ -1,5 +1,6 @@
 package panel;
 
+import constants.PanelType;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -113,20 +114,18 @@ public class EndGamePanel extends JPanel implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     if (e.getSource().equals(newGameBtn)) {
       InGamePanel.initNewGame();
-      System.out.println("New game btn pressed");
-      Frame.setNewGame_trigger(true);
+      Frame.switchPanel(PanelType.IN_GAME);
       return;
     }
 
     if (e.getSource().equals(nextMatchBtn)) {
       InGamePanel.nextMatch();
-      System.out.println("Next match btn pressed");
-      Frame.setNewGame_trigger(true);
+      Frame.switchPanel(PanelType.IN_GAME);
       return;
     }
 
     if (e.getSource().equals(homeBtn)) {
-      Frame.setMenu_trigger(true);
+      Frame.switchPanel(PanelType.MENU);
     }
   }
 }

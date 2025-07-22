@@ -1,5 +1,6 @@
 package panel;
 
+import constants.PanelType;
 import data.Record;
 import data.RecordManager;
 import frame.Frame;
@@ -48,11 +49,11 @@ public class LeaderboardPanel extends JPanel implements ActionListener {
     JLabel title = new JLabel("Leaderboard", SwingConstants.CENTER);
     title.setFont(new Font("Arial", Font.BOLD, 30));
     title.setForeground(Color.WHITE);
-    title.setBounds(0, 30, 800, 40); // adjusted y to 30 for vertical centering
+    title.setBounds(0, 30, 800, 40);
     headerPanel.add(title);
 
     add(headerPanel);
-    add(Box.createRigidArea(new Dimension(0, 56))); // was 16, increased by 40px to push table down
+    add(Box.createRigidArea(new Dimension(0, 56)));
 
     // Table setup
     String[] columns = {"Rank", "Player Name", "Total Score", "Games Played"};
@@ -68,22 +69,35 @@ public class LeaderboardPanel extends JPanel implements ActionListener {
 	Component c = super.prepareRenderer(renderer, row, column);
 	if (c instanceof JComponent) {
 	  ((JComponent) c).setOpaque(true);
+	  if (row == 0) {
+	    c.setForeground(Color.decode("#fdba14"));
+	    c.setFont(new Font("Arial", Font.BOLD, 14));
+	  } else if (row == 1) {
+	    c.setForeground(Color.decode("#ef4a4a"));
+	    c.setFont(new Font("Arial", Font.BOLD, 14));
+	  } else if (row == 2) {
+	    c.setForeground(Color.GREEN);
+	    c.setFont(new Font("Arial", Font.BOLD, 14));
+	  } else {
+	    c.setForeground(Color.WHITE);
+	  }
+
 	  if (row % 2 != 0) {
 	    c.setBackground(new Color(240, 240, 240, 50));
 	  } else {
 	    ((JComponent) c).setOpaque(false);
 	  }
-	  c.setForeground(Color.WHITE);
 	}
 	return c;
       }
     };
+
     leaderboardTable.setOpaque(false);
     leaderboardTable.setForeground(Color.WHITE);
     leaderboardTable.setFont(new Font("Arial", Font.PLAIN, 14));
     leaderboardTable.setRowHeight(28);
     leaderboardTable.setShowGrid(false);
-    leaderboardTable.setIntercellSpacing(new Dimension(0, 1)); // 1px separator between rows
+    leaderboardTable.setIntercellSpacing(new Dimension(0, 1));
 
     leaderboardTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16));
     leaderboardTable.getTableHeader().setReorderingAllowed(false);
@@ -157,7 +171,7 @@ public class LeaderboardPanel extends JPanel implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == returnButton) {
-      Frame.setMenu_trigger(true);
+      Frame.switchPanel(PanelType.MENU);
     }
   }
 }

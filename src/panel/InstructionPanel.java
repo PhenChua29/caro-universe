@@ -1,5 +1,6 @@
 package panel;
 
+import constants.PanelType;
 import frame.Frame;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -98,7 +99,7 @@ public class InstructionPanel extends JPanel {
     returnButton.setBorderPainted(false);
     returnButton.setFocusPainted(false);
     returnButton.addActionListener(e -> {
-      Frame.setMenu_trigger(true);
+      Frame.switchPanel(PanelType.MENU);
 
       new Timer(600, evt -> {
 	resetToFirstImage();

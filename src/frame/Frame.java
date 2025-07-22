@@ -1,51 +1,44 @@
 package frame;
 
+import constants.PanelType;
+import lib.JFrameTemplate;
+import object.Bot;
+import object.Player;
+
 import java.awt.Color;
 import java.awt.Toolkit;
-import lib.JFrameTemplate;
+
+import panel.AboutUsPanel;
 import panel.EndGamePanel;
 import panel.InGamePanel;
 import panel.InfoPromptPanel;
-import panel.MenuPanel;
-import panel.AboutUsPanel;
 import panel.InstructionPanel;
 import panel.LeaderboardPanel;
-import object.Bot;
-import object.Player;
+import panel.MenuPanel;
+import panel.LoadingPanel;
 
 public class Frame extends JFrameTemplate {
 
   public static final int WIDTH = 800;
+  private static Frame instance;
 
-  public static final String menuPanel = "MenuPanel";
-  public static final String inGamePanel = "InGamePanel";
-  public static final String endGamePanel = "EndGamePanel";
-  public static final String instructionPanel = "InstructionPanel";
-  public static final String aboutUsPanel = "AboutUsPanel";
-  public static final String infoPromptPanel = "InfoPromptPanel";
-  public static final String leaderboardPanel = "LeaderboardPanel";
-
-  private static boolean newGame_trigger = false;
-  private static boolean quitGame_trigger = false;
-  private static boolean instruction_trigger = false;
-  private static boolean aboutUs_trigger = false;
-  private static boolean endGame_trigger = false;
-  private static boolean menu_trigger = false;
-  private static boolean info_prompt_trigger = false;
-  private static boolean leaderboard_trigger = false;
-
-  private MenuPanel MenuPanel;
-  private InGamePanel InGamePanel;
-  private EndGamePanel EndGamePanel;
-  private InstructionPanel InstructionPanel;
-  private AboutUsPanel AboutUsPanel;
-  private InfoPromptPanel InfoPromptPanel;
-  private LeaderboardPanel LeaderboardPanel;
+  private MenuPanel menuPanel;
+  private InGamePanel inGamePanel;
+  private EndGamePanel endGamePanel;
+  private InstructionPanel instructionPanel;
+  private AboutUsPanel aboutUsPanel;
+  private InfoPromptPanel infoPromptPanel;
+  private LeaderboardPanel leaderboardPanel;
+  private LoadingPanel loadingPanel;
 
   private Player currentPlayer;
   private Bot bot;
 
+  private PanelType currentPanel = null;
+
   public Frame() {
+    instance = this;
+
     currentPlayer = new Player();
     bot = new Bot();
     bot.loadRandomMoveExcept(currentPlayer.loadRandomMove());
@@ -54,186 +47,86 @@ public class Frame extends JFrameTemplate {
     setResizable(false);
     setTitle("Caro Universe");
     setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/elements/ico.png")));
-    initPanels();
+    
+    initLoadingScreen();
+  }
+
+  private void initLoadingScreen() {
+    // Show loading screen briefly at startup
+    loadingPanel = new LoadingPanel();
+    setContentPane(loadingPanel);
+    repaint();
+    validate();
+
+    javax.swing.Timer startupDelay = new javax.swing.Timer(LoadingPanel.LOADING_TIME, e -> {
+      initPanels();
+      switchPanel(PanelType.MENU);
+    });
+    startupDelay.setRepeats(false);
+    startupDelay.start();
   }
 
   private void initPanels() {
-    MenuPanel = new MenuPanel();
-    this.add(MenuPanel);
+    menuPanel = new MenuPanel();
+    infoPromptPanel = new InfoPromptPanel(currentPlayer, bot);
+    inGamePanel = new InGamePanel(currentPlayer, bot);
+    endGamePanel = new EndGamePanel();
+    instructionPanel = new InstructionPanel();
+    aboutUsPanel = new AboutUsPanel();
+    leaderboardPanel = new LeaderboardPanel();
 
-    InfoPromptPanel = new InfoPromptPanel(currentPlayer, bot);
-    this.add(InfoPromptPanel);
-
-    InGamePanel = new InGamePanel(currentPlayer, bot);
-    this.add(InGamePanel);
-
-    EndGamePanel = new EndGamePanel();
-    this.add(EndGamePanel);
-
-    InstructionPanel = new InstructionPanel();
-    this.add(InstructionPanel);
-
-    AboutUsPanel = new AboutUsPanel();
-    this.add(AboutUsPanel);
-
-    LeaderboardPanel = new LeaderboardPanel();
-    this.add(LeaderboardPanel);
-
-    switchPanel(menuPanel);
+    add(menuPanel);
+    add(infoPromptPanel);
+    add(inGamePanel);
+    add(endGamePanel);
+    add(instructionPanel);
+    add(aboutUsPanel);
+    add(leaderboardPanel);
   }
 
-  public void switchPanel() {
-    if (newGame_trigger) {
-      InGamePanel.update();
-      System.out.println("Switched into " + inGamePanel);
-      switchPanel(inGamePanel);
-      setNewGame_trigger(false);
-
-      try {
-	Thread.sleep(1000);
-      } catch (Exception e) {
-	System.out.println(e);
-	e.printStackTrace();
-      }
-      return;
-    }
-
-    if (info_prompt_trigger) {
-      InfoPromptPanel.reset();
-      switchPanel(infoPromptPanel);
-      System.out.println("Switched into " + infoPromptPanel);
-      setInfo_prompt_trigger(false);
-      return;
-    }
-
-    if (instruction_trigger) {
-      System.out.println("Switched into " + instructionPanel);
-      switchPanel(instructionPanel);
-      setInstruction_trigger(false);
-      return;
-    }
-
-    if (aboutUs_trigger) {
-      switchPanel(aboutUsPanel);
-      System.out.println("Switched into " + aboutUsPanel);
-      setAboutUs_trigger(false);
-      return;
-    }
-
-    if (endGame_trigger) {
-      System.out.println("Switched into " + endGamePanel);
-      switchPanel(endGamePanel);
-      setEndGame_trigger(false);
-      return;
-    }
-
-    if (leaderboard_trigger) {
-      System.out.println("Switched into " + leaderboardPanel);
-      switchPanel(leaderboardPanel);
-      setLeaderboard_trigger(false);
-      return;
-    }
-
-    if (menu_trigger) {
-      System.out.println("Switched into " + menuPanel);
-      switchPanel(menuPanel);
-      setMenu_trigger(false);
-      return;
-    }
-
-    if (quitGame_trigger) {
-      System.out.println("Quitted Game");
-      setQuitGame_trigger(false);
-      this.dispose();
-      System.exit(0);
+  public static void switchPanel(PanelType panel) {
+    if (instance != null) {
+      instance._switchPanel(panel);
     }
   }
 
-  private void switchPanel(String panel) {
-    System.out.println(panel);
-
-    if (panel.equals(menuPanel)) {
-      setContentPane(MenuPanel);
-    } else if (panel.equals(infoPromptPanel)) {
-      setContentPane(InfoPromptPanel);
-    } else if (panel.equals(inGamePanel)) {
-      setContentPane(InGamePanel);
-    } else if (panel.equals(endGamePanel)) {
-      setContentPane(EndGamePanel);
-    } else if (panel.equals(aboutUsPanel)) {
-      setContentPane(AboutUsPanel);
-    } else if (panel.equals(instructionPanel)) {
-      setContentPane(InstructionPanel);
-    } else if (panel.equals(leaderboardPanel)) {
-      setContentPane(LeaderboardPanel);
+  private void _switchPanel(PanelType panel) {
+    if (panel == currentPanel) {
+      return;
     }
 
+    switch (panel) {
+      case MENU:
+	setContentPane(menuPanel);
+	break;
+      case INFO_PROMPT:
+	infoPromptPanel.reset();
+	setContentPane(infoPromptPanel);
+	break;
+      case IN_GAME:
+	inGamePanel.update();
+	setContentPane(inGamePanel);
+	break;
+      case END_GAME:
+	setContentPane(endGamePanel);
+	break;
+      case INSTRUCTION:
+	setContentPane(instructionPanel);
+	break;
+      case ABOUT_US:
+	setContentPane(aboutUsPanel);
+	break;
+      case LEADERBOARD:
+	setContentPane(leaderboardPanel);
+	break;
+      case QUIT:
+	dispose();
+	System.exit(0);
+	return;
+    }
+
+    currentPanel = panel;
     repaint();
     validate();
-  }
-
-  public static boolean isStateChange() {
-    return (newGame_trigger || info_prompt_trigger || quitGame_trigger
-        || aboutUs_trigger || endGame_trigger || menu_trigger || instruction_trigger || leaderboard_trigger);
-  }
-
-  public static boolean isNewGame_trigger() {
-    return newGame_trigger;
-  }
-
-  public static void setNewGame_trigger(boolean newGame_state) {
-    newGame_trigger = newGame_state;
-  }
-
-  public static boolean isQuitGame_trigger() {
-    return quitGame_trigger;
-  }
-
-  public static void setQuitGame_trigger(boolean QuitGame_trigger) {
-    quitGame_trigger = QuitGame_trigger;
-  }
-
-  public static boolean isInstruction_trigger() {
-    return instruction_trigger;
-  }
-
-  public static void setInstruction_trigger(boolean instruction_trigger_state) {
-    instruction_trigger = instruction_trigger_state;
-  }
-
-  public static boolean isAboutUs_trigger() {
-    return aboutUs_trigger;
-  }
-
-  public static void setAboutUs_trigger(boolean AboutUs_trigger) {
-    aboutUs_trigger = AboutUs_trigger;
-  }
-
-  public static boolean isEndGame_trigger() {
-    return endGame_trigger;
-  }
-
-  public static void setEndGame_trigger(boolean EndGame_trigger) {
-    endGame_trigger = EndGame_trigger;
-  }
-
-  public static boolean isMenu_trigger() {
-    return menu_trigger;
-  }
-
-  public static void setMenu_trigger(boolean Menu_trigger) {
-    menu_trigger = Menu_trigger;
-  }
-
-  public static void setInfo_prompt_trigger(boolean Info_prompt_trigger) {
-    info_prompt_trigger = Info_prompt_trigger;
-  }
-
-  public static boolean isLeaderboard_trigger() {
-    return leaderboard_trigger;
-  }
-
-  public static void setLeaderboard_trigger(boolean Leaderboard_trigger) {
-    leaderboard_trigger = Leaderboard_trigger;
   }
 }

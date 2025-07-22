@@ -1,5 +1,6 @@
 package panel;
 
+import constants.PanelType;
 import frame.Frame;
 import java.awt.Color;
 import java.awt.Font;
@@ -119,9 +120,9 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
     Timer clouds = new Timer(60, new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent evt) {
-        moveCloud(e[0], 1, 800);
-        moveCloud(e[1], 2, 800);
-        moveCloud(e[2], -1, -e[2].getWidth());
+	moveCloud(e[0], 1, 800);
+	moveCloud(e[1], 2, 800);
+	moveCloud(e[2], -1, -e[2].getWidth());
       }
     });
 
@@ -133,11 +134,11 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
 
       @Override
       public void actionPerformed(ActionEvent evt) {
-        double y = e[3].getY();
-        y = Math.cos(alpha) >= 0 ? y + Math.ceil(Math.cos(alpha + pichia))
-            : y + Math.floor(Math.cos(alpha + pichia));
-        alpha += pichia;
-        e[3].setBounds(e[3].getX(), (int) y, e[3].getWidth(), e[3].getHeight());
+	double y = e[3].getY();
+	y = Math.cos(alpha) >= 0 ? y + Math.ceil(Math.cos(alpha + pichia))
+		: y + Math.floor(Math.cos(alpha + pichia));
+	alpha += pichia;
+	e[3].setBounds(e[3].getX(), (int) y, e[3].getWidth(), e[3].getHeight());
       }
     });
 
@@ -160,15 +161,15 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == newGameBtn) {
-      Frame.setInfo_prompt_trigger(true);
+      Frame.switchPanel(PanelType.INFO_PROMPT);
     } else if (e.getSource() == leaderboardBtn) {
-      Frame.setLeaderboard_trigger(true);
+      Frame.switchPanel(PanelType.LEADERBOARD);
     } else if (e.getSource() == aboutBtn) {
-      Frame.setAboutUs_trigger(true);
+      Frame.switchPanel(PanelType.ABOUT_US);
     } else if (e.getSource() == quitBtn) {
-      Frame.setQuitGame_trigger(true);
+      Frame.switchPanel(PanelType.QUIT);
     } else if (e.getSource() == howToPlayBtn) {
-      Frame.setInstruction_trigger(true);
+      Frame.switchPanel(PanelType.INSTRUCTION);
     }
   }
 }

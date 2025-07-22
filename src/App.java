@@ -1,6 +1,12 @@
+
+import frame.Frame;
+import javax.swing.SwingUtilities;
+
 public class App {
-    public static void main(String[] args) throws Exception {
-        GameThread GameThread = new GameThread();
-        GameThread.start();
-    }
+
+  public static void main(String[] args) {
+    SwingUtilities.invokeLater(() -> {
+      new Frame();
+    });
+  }
 }
