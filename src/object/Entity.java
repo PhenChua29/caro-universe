@@ -62,12 +62,11 @@ public class Entity {
   }
 
   public void setScores(int scores) {
-    this.scores = scores;
+    this.scores = scores < 0 ? 0 : scores;
   }
 
   public void increaseScore() {
     setScores(scores + 1);
-    System.out.println("Score of " + name + " is: " + scores);
   }
 
   public ImageIcon getMove() {
@@ -77,7 +76,7 @@ public class Entity {
   public EntityType getEntityType() {
     return entityType;
   }
-  
+
   public int loadRandomMove() {
     Random randomizer = new Random();
     final int num = randomizer.nextInt(5) + 1;
@@ -90,11 +89,11 @@ public class Entity {
   public int loadRandomMoveExcept(int number) {
     Random randomizer = new Random();
     int num = -1;
-    
+
     do {
       num = randomizer.nextInt(5) + 1;
     } while (num == number);
-   
+
     String filePath = String.format("/img/elements/move%s.png", num);
     ImageIcon icon = new ImageIcon(getClass().getResource(filePath));
     move = icon;

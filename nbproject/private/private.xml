@@ -13,15 +13,15 @@
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/panel/LeaderboardPanel.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/elements/sun.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/lib/JPanelTemplate.java</file>
+            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/avatar/f1.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/elements/move3.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/data/Record.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/constants/Difficulty.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/elements/move4.png</file>
+            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/instructions/2.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/bg/1.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/panel/AboutUsPanel.java</file>
-            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/bg/b3.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/bg/b5r.png</file>
-            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/panel/CreditPanel.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/elements/c1.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/constants/EntityType.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/lib/JFrameTemplate.java</file>
@@ -31,21 +31,24 @@
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/panel/InstructionPanel.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/lib/JPanelWLabel.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/panel/GamePanel.java</file>
+            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/avatar/m2.png</file>
+            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/instructions/3.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/panel/PlayerInfoPanel.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/bg/2.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/panel/InfoPanel.java</file>
+            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/avatar/m3.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/elements/move1.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/panel/InfoPromptPanel.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/panel/InGamePanel.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/elements/move5.png</file>
+            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/avatar/m1.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/data/RecordManager.java</file>
-            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/GameThread.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/object/Player.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/panel/MenuPanel.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/elements/c2.png</file>
-            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/bg/b5.png</file>
-            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/bg/3.png</file>
+            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/instructions/4.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/object/Bot.java</file>
+            <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/panel/LoadingPanel.java</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/img/elements/move2.png</file>
             <file>file:/C:/Users/Admin/Desktop/CSD/project/caro-universe-v2/src/constants/Genders.java</file>
         </group>

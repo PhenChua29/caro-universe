@@ -249,12 +249,12 @@ public class Bot extends Entity {
       {1, -1} // Diagonal /
     };
 
-    final int WIN = 1_000_000;
+    final int WIN = 1_000_000_000;
     final int WIN_COND = GamePanel.WIN_CONDITION;
     final int SIZE = GamePanel.BOARD_SIZE;
     final int EMPTY = 0;
     final int CENTER = SIZE / 2;
-    final float FORGETFULNESS = 0.15f;
+    final float FORGETFULNESS = 0.05f;
 
     final boolean forgetCenterPos = Math.random() < FORGETFULNESS;
     final boolean forgetWinCondition = Math.random() < FORGETFULNESS;
@@ -270,7 +270,7 @@ public class Bot extends Entity {
 
 	if (!forgetCenterPos) {
 	  int centerDistance = Math.abs(row - CENTER) + Math.abs(col - CENTER);
-	  score += (SIZE - centerDistance);
+	  score += 10 * (SIZE - centerDistance);
 	}
 
 	for (int[] dir : DIRECTIONS) {
@@ -280,7 +280,7 @@ public class Bot extends Entity {
 	    int r = row + dir[0] * streakLength;
 	    int c = col + dir[1] * streakLength;
 
-	    if (r < 0 || r >= SIZE || c < 0 || c >= SIZE || board[r][c] != player) {
+	    if (!isInBounds(r, c, SIZE) || board[r][c] != player) {
 	      break;
 	    }
 
@@ -297,12 +297,11 @@ public class Bot extends Entity {
 	    int afterRow = row + dir[0] * streakLength;
 	    int afterCol = col + dir[1] * streakLength;
 
-	    boolean openStart = beforeRow >= 0 && beforeCol >= 0 && beforeRow < SIZE && beforeCol < SIZE
-		    && board[beforeRow][beforeCol] == EMPTY;
-	    boolean openEnd = afterRow >= 0 && afterCol >= 0 && afterRow < SIZE && afterCol < SIZE
-		    && board[afterRow][afterCol] == EMPTY;
+	    boolean openStart = isInBounds(beforeRow, beforeCol, SIZE) && board[beforeRow][beforeCol] == EMPTY;
+	    boolean openEnd = isInBounds(afterRow, afterCol, SIZE) && board[afterRow][afterCol] == EMPTY;
 
 	    double streakScore = Math.pow(10, streakLength);
+
 	    if (openStart && openEnd) {
 	      streakScore *= 2;
 	    } else if (!openStart && !openEnd) {
@@ -311,33 +310,71 @@ public class Bot extends Entity {
 
 	    score += streakScore;
 
+	    if (streakLength == WIN_COND - 1 && (openStart || openEnd)) {
+	      score += 5000;
+	    }
+
 	    // Detect leap traps like x _ x x or x x _ x
 	    if (!forgetLeapTrap) {
-	      int gapRow = row + dir[0] * (streakLength + 1);
-	      int gapCol = col + dir[1] * (streakLength + 1);
-	      int gapMidRow = row + dir[0];
-	      int gapMidCol = col + dir[1];
+	      // Pattern: x _ x x (forward leap)
+	      int midRowF = row + dir[0];
+	      int midColF = col + dir[1];
+	      int endRowF1 = row + dir[0] * 2;
+	      int endColF1 = col + dir[1] * 2;
+	      int endRowF2 = row + dir[0] * 3;
+	      int endColF2 = col + dir[1] * 3;
 
-	      if (gapRow >= 0 && gapRow < SIZE && gapCol >= 0 && gapCol < SIZE
-		      && board[gapRow][gapCol] == player
-		      && board[gapMidRow][gapMidCol] == EMPTY) {
-		score += 800; // Bonus for leap pattern
+	      if (isInBounds(midRowF, midColF, SIZE) && board[midRowF][midColF] == EMPTY
+		      && isInBounds(endRowF1, endColF1, SIZE) && board[endRowF1][endColF1] == player
+		      && isInBounds(endRowF2, endColF2, SIZE) && board[endRowF2][endColF2] == player) {
+		score += 800;
+	      }
+
+	      // Pattern: x x _ x (backward leap)
+	      int backRow1 = row - dir[0];
+	      int backCol1 = col - dir[1];
+	      int backRow2 = row - dir[0] * 2;
+	      int backCol2 = col - dir[1] * 2;
+	      int backRow3 = row - dir[0] * 3;
+	      int backCol3 = col - dir[1] * 3;
+
+	      if (isInBounds(backRow1, backCol1, SIZE) && board[backRow1][backCol1] == player
+		      && isInBounds(backRow2, backCol2, SIZE) && board[backRow2][backCol2] == EMPTY
+		      && isInBounds(backRow3, backCol3, SIZE) && board[backRow3][backCol3] == player) {
+		score += 800;
 	      }
 	    }
 
-	    // Detect potential double open-end win threat: x _ x _ x
+	    // Detect potential double open-end win threat: _ x x _ _
 	    if (!forgetDoubleOpenThreat) {
-	      int aheadRow = afterRow + dir[0];
-	      int aheadCol = afterCol + dir[1];
-	      if (openStart && openEnd && aheadRow >= 0 && aheadCol >= 0 && aheadRow < SIZE && aheadCol < SIZE
-		      && board[aheadRow][aheadCol] == EMPTY && streakLength == WIN_COND - 2) {
-		score += 3000; // Critical threat
+	      int bRow = row - dir[0];
+	      int bCol = col - dir[1];
+	      int aRow1 = row + dir[0];
+	      int aCol1 = col + dir[1];
+	      int aRow2 = row + dir[0] * 2;
+	      int aCol2 = col + dir[1] * 2;
+	      int aRow3 = row + dir[0] * 3;
+	      int aCol3 = col + dir[1] * 3;
+
+	      if (isInBounds(bRow, bCol, SIZE) && board[bRow][bCol] == EMPTY
+		      && isInBounds(aRow1, aCol1, SIZE) && board[aRow1][aCol1] == player
+		      && isInBounds(aRow2, aCol2, SIZE) && board[aRow2][aCol2] == EMPTY
+		      && isInBounds(aRow3, aCol3, SIZE) && board[aRow3][aCol3] == EMPTY) {
+		score += 3000;
 	      }
+	    }
+
+	    if (row == 0 || col == 0 || row == SIZE - 1 || col == SIZE - 1) {
+	      score *= 0.7;
 	    }
 	  }
 	}
       }
     }
     return score;
+  }
+
+  private boolean isInBounds(int row, int col, int size) {
+    return 0 <= row && 0 <= col && row < size && col < size;
   }
 }

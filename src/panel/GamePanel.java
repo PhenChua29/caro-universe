@@ -20,6 +20,10 @@ import object.Bot;
 import object.Move;
 import object.Player;
 import data.RecordManager;
+import java.awt.BasicStroke;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -30,6 +34,7 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
   public static final int PLAYER = 1;
   public static final int BOT = 2;
   public static final int WIN_CONDITION = 4;
+  private static final int DELAY_BEFORE_END = 1500;
 
   private static final JButtonTemplate[] button = new JButtonTemplate[BOARD_SIZE * BOARD_SIZE];
   private static boolean humanTurn;
@@ -50,6 +55,7 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
   private static final int UNDO_LIMIT = 3;
   private static int undoCount;
   private static Stack<Move> moveHistory;
+  private static ArrayList<Move> winningSequence;
 
   // Init
   public GamePanel(final Player player, final Bot bot) {
@@ -60,6 +66,7 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
     undoCount = 0;
     playing_history = new int[BOARD_SIZE][BOARD_SIZE];
     moveHistory = new Stack<>();
+    winningSequence = new ArrayList<>();
     isBotThinking = false;
 
     initgamePanel();
@@ -251,7 +258,7 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
   }
 
   private static void gameOver() {
-    new Timer(1000, e -> {
+    new Timer(DELAY_BEFORE_END, e -> {
       Frame.switchPanel(PanelType.END_GAME);
     }) {
       {
@@ -334,6 +341,12 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
 
 	  if (count == WIN_CONDITION) {
 	    player_win = current;
+	    winningSequence.clear();
+
+	    for (int k = 0; k < WIN_CONDITION; k++) {
+	      winningSequence.add(new Move(i, j - k));
+	    }
+
 	    return 1;
 	  }
 	} else {
@@ -361,6 +374,12 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
 
 	  if (count == WIN_CONDITION) {
 	    player_win = current;
+	    winningSequence.clear();
+
+	    for (int k = 0; k < WIN_CONDITION; k++) {
+	      winningSequence.add(new Move(j - k, i));
+	    }
+
 	    return 1;
 	  }
 	} else {
@@ -389,6 +408,12 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
 	    count++;
 	    if (count == WIN_CONDITION) {
 	      player_win = current;
+	      winningSequence.clear();
+
+	      for (int h = 0; h < WIN_CONDITION; h++) {
+		winningSequence.add(new Move(i + k - h, j + k - h));
+	      }
+
 	      return 1;
 	    }
 	  } else {
@@ -411,6 +436,12 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
 	    count++;
 	    if (count == WIN_CONDITION) {
 	      player_win = current;
+	      winningSequence.clear();
+
+	      for (int h = 0; h < WIN_CONDITION; h++) {
+		winningSequence.add(new Move(i + k - h, j - k + h));
+	      }
+
 	      return 1;
 	    }
 	  } else {
@@ -517,4 +548,35 @@ public class GamePanel extends JPanelTemplate implements ActionListener {
       }).start();
     }
   }
+
+  @Override
+  protected void paintComponent(Graphics g) {
+    super.paintComponent(g); // Always clear first
+    if (player_win != 0 && !winningSequence.isEmpty()) {
+      drawWinningLine(g);
+    }
+  }
+
+  private void drawWinningLine(Graphics g) {
+    Graphics2D g2 = (Graphics2D) g.create();
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    g2.setColor(Color.RED);
+    g2.setStroke(new BasicStroke(10, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+
+    Move start = winningSequence.get(0);
+    Move end = winningSequence.get(winningSequence.size() - 1);
+
+    int cellWidth = getWidth() / BOARD_SIZE;
+    int cellHeight = getHeight() / BOARD_SIZE;
+
+    int x1 = start.getCol() * cellWidth + cellWidth / 2;
+    int y1 = start.getRow() * cellHeight + cellHeight / 2;
+    int x2 = end.getCol() * cellWidth + cellWidth / 2;
+    int y2 = end.getRow() * cellHeight + cellHeight / 2;
+
+    g2.drawLine(x1, y1, x2, y2);
+    repaint();
+    g2.dispose();
+  }
+
 }

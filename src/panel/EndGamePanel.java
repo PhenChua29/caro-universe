@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import frame.Frame;
+import java.awt.FontMetrics;
 import lib.JButtonTemplate;
 
 public class EndGamePanel extends JPanel implements ActionListener {
@@ -70,7 +71,7 @@ public class EndGamePanel extends JPanel implements ActionListener {
 
     textField.setForeground(new Color(131, 206, 255));
     textField.setBounds(0, 200, 800, 150);
-    textField.setFont(new Font("Ink Free", Font.BOLD, 52));
+    textField.setFont(new Font("Ink Free", Font.BOLD, 42));
     textField.setBackground(new Color(6, 5, 55));
     textField.setOpaque(false);
 
