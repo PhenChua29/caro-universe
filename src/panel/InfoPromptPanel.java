@@ -213,6 +213,20 @@ public class InfoPromptPanel extends JPanel implements ActionListener {
       return;
     }
 
+    if (!name.matches("^[a-zA-Z0-9]+$")) {
+      JOptionPane.showMessageDialog(this, "Name cannot contain spaces or special characters.\nOnly letters and digits are allowed.",
+	      "Invalid Name",
+	      JOptionPane.WARNING_MESSAGE);
+      return;
+    }
+
+    if (name.length() > 9) {
+      JOptionPane.showMessageDialog(this, "Name cannot be more than 13 characters.",
+	      "Name Too Long",
+	      JOptionPane.WARNING_MESSAGE);
+      return;
+    }
+
     if (gender == null) {
       JOptionPane.showMessageDialog(this, "Please select a gender.",
 	      "Missing Gender",

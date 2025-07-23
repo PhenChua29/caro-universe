@@ -24,7 +24,7 @@ public class Record implements Comparable<Record> {
   }
   
   public void setTotalScore(int totalScore) {
-    this.totalScore = totalScore;
+    this.totalScore = totalScore < 0 ? 0 : totalScore;
   }
   
   public String getPlayerName() {
@@ -40,7 +40,7 @@ public class Record implements Comparable<Record> {
   }
   
   public void setTotalGames(int totalGames) {
-    this.totalGames = totalGames;
+    this.totalGames = totalGames < 0 ? 0 : totalGames;
   }
 
   @Override

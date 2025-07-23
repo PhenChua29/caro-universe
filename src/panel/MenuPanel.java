@@ -40,7 +40,7 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
 
     howToPlayBtn = new JButtonTemplate();
     howToPlayBtn.setImageBackground(new ImageIcon(getClass().getResource("/img/button/blueLr.png")).getImage());
-    howToPlayBtn.set(450, 310, 400, 110, "  How to Play", Color.BLACK, Color.WHITE);
+    howToPlayBtn.set(470, 310, 400, 110, "  How to Play", Color.BLACK, Color.WHITE);
     howToPlayBtn.setFont(new Font("Ink Free", Font.PLAIN, 48));
     howToPlayBtn.setHorizontalAlignment(SwingConstants.LEFT);
     howToPlayBtn.setStyling(false);
