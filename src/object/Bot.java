@@ -16,6 +16,8 @@ public class Bot extends Entity {
 
   private Difficulty difficulty;
   private static final int MAX_DEPTH = 3;
+  private final int WIN = 1_000_000_000;
+  private final Map<String, Integer> evalCache;
 
   public Bot() {
     super(EntityType.BOT);
@@ -23,6 +25,7 @@ public class Bot extends Entity {
     this.setGender(Math.random() < 0.5 ? Genders.MALE : Genders.FEMALE);
     loadRandomAvatar();
     difficulty = Difficulty.EASY;
+    evalCache = new HashMap<>();
   }
 
   public Difficulty getDifficulty() {
@@ -161,6 +164,7 @@ public class Bot extends Entity {
   }
 
   private Move getHardMove(int[][] board) {
+    evalCache.clear();
     int bestScore = Integer.MIN_VALUE;
     Move bestMove = null;
 
@@ -182,42 +186,39 @@ public class Bot extends Entity {
   }
 
   private int minimax(int[][] board, int depth, boolean isMax, int alpha, int beta) {
-    int score = evaluate(board);
-    if (Math.abs(score) >= 100000 || isBoardFull(board) || depth >= MAX_DEPTH) {
+    int score = evaluateCached(board);
+
+    if (Math.abs(score) >= WIN || isBoardFull(board) || depth >= MAX_DEPTH) {
       return score;
     }
+
+    List<Move> moves = getSortedMoves(board, isMax ? GamePanel.BOT : GamePanel.PLAYER);
 
     if (isMax) {
       int best = Integer.MIN_VALUE;
 
-      for (int r = 0; r < GamePanel.BOARD_SIZE; r++) {
-	for (int c = 0; c < GamePanel.BOARD_SIZE; c++) {
-	  if (board[r][c] == 0) {
-	    board[r][c] = GamePanel.BOT;
-	    best = Math.max(best, minimax(board, depth + 1, false, alpha, beta));
-	    board[r][c] = 0;
-	    alpha = Math.max(alpha, best);
-	    if (beta <= alpha) {
-	      return best;
-	    }
-	  }
+      for (Move move : moves) {
+	board[move.getRow()][move.getCol()] = GamePanel.BOT;
+	best = Math.max(best, minimax(board, depth + 1, false, alpha, beta));
+	board[move.getRow()][move.getCol()] = 0;
+
+	alpha = Math.max(alpha, best);
+	if (beta <= alpha) {
+	  break;
 	}
       }
       return best;
     } else {
       int best = Integer.MAX_VALUE;
 
-      for (int r = 0; r < GamePanel.BOARD_SIZE; r++) {
-	for (int c = 0; c < GamePanel.BOARD_SIZE; c++) {
-	  if (board[r][c] == 0) {
-	    board[r][c] = GamePanel.PLAYER;
-	    best = Math.min(best, minimax(board, depth + 1, true, alpha, beta));
-	    board[r][c] = 0;
-	    beta = Math.min(beta, best);
-	    if (beta <= alpha) {
-	      return best;
-	    }
-	  }
+      for (Move move : moves) {
+	board[move.getRow()][move.getCol()] = GamePanel.PLAYER;
+	best = Math.min(best, minimax(board, depth + 1, true, alpha, beta));
+	board[move.getRow()][move.getCol()] = 0;
+
+	beta = Math.min(beta, best);
+	if (beta <= alpha) {
+	  break;
 	}
       }
       return best;
@@ -235,6 +236,18 @@ public class Bot extends Entity {
     return true;
   }
 
+  private int evaluateCached(int[][] board) {
+    String key = boardHash(board);
+
+    if (evalCache.containsKey(key)) {
+      return evalCache.get(key);
+    }
+
+    int score = evaluate(board);
+    evalCache.put(key, score);
+    return score;
+  }
+
   private int evaluate(int[][] board) {
     return evaluateLines(board, GamePanel.BOT) - evaluateLines(board, GamePanel.PLAYER);
   }
@@ -249,12 +262,11 @@ public class Bot extends Entity {
       {1, -1} // Diagonal /
     };
 
-    final int WIN = 1_000_000_000;
     final int WIN_COND = GamePanel.WIN_CONDITION;
     final int SIZE = GamePanel.BOARD_SIZE;
     final int EMPTY = 0;
     final int CENTER = SIZE / 2;
-    final float FORGETFULNESS = 0.05f;
+    final float FORGETFULNESS = 0.1f;
 
     final boolean forgetCenterPos = Math.random() < FORGETFULNESS;
     final boolean forgetWinCondition = Math.random() < FORGETFULNESS;
@@ -268,9 +280,11 @@ public class Bot extends Entity {
 	  continue;
 	}
 
+	int cellScore = 0;
+
 	if (!forgetCenterPos) {
 	  int centerDistance = Math.abs(row - CENTER) + Math.abs(col - CENTER);
-	  score += 10 * (SIZE - centerDistance);
+	  cellScore += 10 * (SIZE - centerDistance);
 	}
 
 	for (int[] dir : DIRECTIONS) {
@@ -283,7 +297,6 @@ public class Bot extends Entity {
 	    if (!isInBounds(r, c, SIZE) || board[r][c] != player) {
 	      break;
 	    }
-
 	    streakLength++;
 	  }
 
@@ -308,73 +321,105 @@ public class Bot extends Entity {
 	      streakScore = Math.pow(10, streakLength - 1);
 	    }
 
-	    score += streakScore;
+	    cellScore += streakScore;
 
 	    if (streakLength == WIN_COND - 1 && (openStart || openEnd)) {
-	      score += 5000;
+	      cellScore += 5000;
+	    }
+	  }
+
+	  // Leap traps
+	  if (!forgetLeapTrap) {
+	    int midRowF = row + dir[0];
+	    int midColF = col + dir[1];
+	    int endRowF1 = row + dir[0] * 2;
+	    int endColF1 = col + dir[1] * 2;
+	    int endRowF2 = row + dir[0] * 3;
+	    int endColF2 = col + dir[1] * 3;
+
+	    if (isInBounds(midRowF, midColF, SIZE) && board[midRowF][midColF] == EMPTY
+		    && isInBounds(endRowF1, endColF1, SIZE) && board[endRowF1][endColF1] == player
+		    && isInBounds(endRowF2, endColF2, SIZE) && board[endRowF2][endColF2] == player) {
+	      cellScore += 800;
 	    }
 
-	    // Detect leap traps like x _ x x or x x _ x
-	    if (!forgetLeapTrap) {
-	      // Pattern: x _ x x (forward leap)
-	      int midRowF = row + dir[0];
-	      int midColF = col + dir[1];
-	      int endRowF1 = row + dir[0] * 2;
-	      int endColF1 = col + dir[1] * 2;
-	      int endRowF2 = row + dir[0] * 3;
-	      int endColF2 = col + dir[1] * 3;
+	    int backRow1 = row - dir[0];
+	    int backCol1 = col - dir[1];
+	    int backRow2 = row - dir[0] * 2;
+	    int backCol2 = col - dir[1] * 2;
+	    int backRow3 = row - dir[0] * 3;
+	    int backCol3 = col - dir[1] * 3;
 
-	      if (isInBounds(midRowF, midColF, SIZE) && board[midRowF][midColF] == EMPTY
-		      && isInBounds(endRowF1, endColF1, SIZE) && board[endRowF1][endColF1] == player
-		      && isInBounds(endRowF2, endColF2, SIZE) && board[endRowF2][endColF2] == player) {
-		score += 800;
-	      }
-
-	      // Pattern: x x _ x (backward leap)
-	      int backRow1 = row - dir[0];
-	      int backCol1 = col - dir[1];
-	      int backRow2 = row - dir[0] * 2;
-	      int backCol2 = col - dir[1] * 2;
-	      int backRow3 = row - dir[0] * 3;
-	      int backCol3 = col - dir[1] * 3;
-
-	      if (isInBounds(backRow1, backCol1, SIZE) && board[backRow1][backCol1] == player
-		      && isInBounds(backRow2, backCol2, SIZE) && board[backRow2][backCol2] == EMPTY
-		      && isInBounds(backRow3, backCol3, SIZE) && board[backRow3][backCol3] == player) {
-		score += 800;
-	      }
+	    if (isInBounds(backRow1, backCol1, SIZE) && board[backRow1][backCol1] == player
+		    && isInBounds(backRow2, backCol2, SIZE) && board[backRow2][backCol2] == EMPTY
+		    && isInBounds(backRow3, backCol3, SIZE) && board[backRow3][backCol3] == player) {
+	      cellScore += 800;
 	    }
+	  }
 
-	    // Detect potential double open-end win threat: _ x x _ _
-	    if (!forgetDoubleOpenThreat) {
-	      int bRow = row - dir[0];
-	      int bCol = col - dir[1];
-	      int aRow1 = row + dir[0];
-	      int aCol1 = col + dir[1];
-	      int aRow2 = row + dir[0] * 2;
-	      int aCol2 = col + dir[1] * 2;
-	      int aRow3 = row + dir[0] * 3;
-	      int aCol3 = col + dir[1] * 3;
+	  // Double open-end threat
+	  if (!forgetDoubleOpenThreat) {
+	    int bRow = row - dir[0];
+	    int bCol = col - dir[1];
+	    int aRow1 = row + dir[0];
+	    int aCol1 = col + dir[1];
+	    int aRow2 = row + dir[0] * 2;
+	    int aCol2 = col + dir[1] * 2;
+	    int aRow3 = row + dir[0] * 3;
+	    int aCol3 = col + dir[1] * 3;
 
-	      if (isInBounds(bRow, bCol, SIZE) && board[bRow][bCol] == EMPTY
-		      && isInBounds(aRow1, aCol1, SIZE) && board[aRow1][aCol1] == player
-		      && isInBounds(aRow2, aCol2, SIZE) && board[aRow2][aCol2] == EMPTY
-		      && isInBounds(aRow3, aCol3, SIZE) && board[aRow3][aCol3] == EMPTY) {
-		score += 3000;
-	      }
-	    }
-
-	    if (row == 0 || col == 0 || row == SIZE - 1 || col == SIZE - 1) {
-	      score *= 0.7;
+	    if (isInBounds(bRow, bCol, SIZE) && board[bRow][bCol] == EMPTY
+		    && isInBounds(aRow1, aCol1, SIZE) && board[aRow1][aCol1] == player
+		    && isInBounds(aRow2, aCol2, SIZE) && board[aRow2][aCol2] == EMPTY
+		    && isInBounds(aRow3, aCol3, SIZE) && board[aRow3][aCol3] == EMPTY) {
+	      cellScore += 3000;
 	    }
 	  }
 	}
+
+	if (row == 0 || col == 0 || row == SIZE - 1 || col == SIZE - 1) {
+	  cellScore *= 0.7;
+	}
+
+	score += cellScore;
       }
     }
+
     return score;
   }
 
   private boolean isInBounds(int row, int col, int size) {
     return 0 <= row && 0 <= col && row < size && col < size;
   }
+
+  private List<Move> getSortedMoves(int[][] board, int player) {
+    List<Move> moves = new ArrayList<>();
+
+    for (int r = 0; r < GamePanel.BOARD_SIZE; r++) {
+      for (int c = 0; c < GamePanel.BOARD_SIZE; c++) {
+	if (board[r][c] == 0) {
+	  board[r][c] = player;
+	  int score = evaluateCached(board);
+	  board[r][c] = 0;
+
+	  Move move = new Move(r, c, score);
+	  moves.add(move);
+	}
+      }
+    }
+
+    moves.sort((a, b) -> Integer.compare(b.getScore(), a.getScore()));
+    return moves;
+  }
+
+  private String boardHash(int[][] board) {
+    StringBuilder sb = new StringBuilder();
+    for (int[] row : board) {
+      for (int cell : row) {
+	sb.append(cell);
+      }
+    }
+    return sb.toString();
+  }
+
 }
