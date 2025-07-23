@@ -35,7 +35,7 @@ public class Bot extends Entity {
 
   public void loadRandomAvatar() {
     Random randomizer = new Random();
-    final int num = randomizer.nextInt(3) + 1;
+    final int num = randomizer.nextInt(4) + 1;
     String filePath = String.format("/img/avatar/b%s.png", num);
     ImageIcon icon = new ImageIcon(getClass().getResource(filePath));
     setAvatar(icon);

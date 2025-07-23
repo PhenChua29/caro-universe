@@ -23,7 +23,6 @@ public class MenuPanel extends JPanelTemplate implements ActionListener {
 
   public MenuPanel() {
     this.set(0, 0, 800, 800, "null", Color.RED);
-    System.out.println(this.getWidth() + "," + this.getHeight());
 
     newGameBtn = new JButtonTemplate();
     newGameBtn.setIcon(new ImageIcon(getClass().getResource("/img/button/blueLr.png")));

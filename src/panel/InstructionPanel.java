@@ -40,16 +40,9 @@ public class InstructionPanel extends JPanel {
     layeredPane.setPreferredSize(new Dimension(800, 800));
     this.add(layeredPane, BorderLayout.CENTER);
 
-    init_background();
     init_images();
     init_controls();
     init_keybindings();
-  }
-
-  private void init_background() {
-    JLabel imgBg = new JLabel(new ImageIcon(getClass().getResource("/img/bg/3.png")));
-    imgBg.setBounds(0, 0, 800, 800);
-    layeredPane.add(imgBg, JLayeredPane.DEFAULT_LAYER);
   }
 
   private void init_images() {
