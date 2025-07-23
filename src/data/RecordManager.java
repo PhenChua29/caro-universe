@@ -55,7 +55,6 @@ public class RecordManager {
 	Record r = new Record(playerName, totalScore, totalMatches);
 
 	data.put(playerName, r);
-	System.out.println(String.format("Read data for %s-%d-%d", playerName, totalScore, totalMatches));
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -90,7 +89,6 @@ public class RecordManager {
   public Record getRecord(String playerName) {
     for (Record r : data.values()) {
       if (r.getPlayerName().equals(playerName)) {
-	System.out.println("Found record with name: " + r.getPlayerName());
 	return r;
       }
     }

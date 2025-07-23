@@ -7,6 +7,7 @@ import object.Player;
 
 import java.awt.Color;
 import java.awt.Toolkit;
+import javax.swing.Timer;
 
 import panel.AboutUsPanel;
 import panel.EndGamePanel;
@@ -58,7 +59,7 @@ public class Frame extends JFrameTemplate {
     repaint();
     validate();
 
-    javax.swing.Timer startupDelay = new javax.swing.Timer(LoadingPanel.LOADING_TIME, e -> {
+    javax.swing.Timer startupDelay = new Timer(LoadingPanel.LOADING_TIME, e -> {
       initPanels();
       switchPanel(PanelType.MENU);
     });
