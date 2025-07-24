@@ -1,8 +1,8 @@
 package panel;
 
-import constants.Difficulty;
-import constants.Genders;
-import constants.PanelType;
+import enums.Difficulty;
+import enums.Genders;
+import enums.PanelType;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;

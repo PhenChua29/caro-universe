@@ -1,7 +1,7 @@
 package panel;
 
-import constants.Difficulty;
-import constants.PanelType;
+import enums.Difficulty;
+import enums.PanelType;
 import data.Record;
 import frame.Frame;
 import java.awt.Color;

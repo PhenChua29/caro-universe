@@ -1,7 +1,7 @@
 package object;
 
-import constants.EntityType;
-import constants.Genders;
+import enums.EntityType;
+import enums.Genders;
 import data.Record;
 import data.RecordManager;
 import java.util.Random;

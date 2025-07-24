@@ -1,6 +1,6 @@
 package panel;
 
-import constants.Difficulty;
+import enums.Difficulty;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;

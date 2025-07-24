@@ -1,6 +1,6 @@
 package frame;
 
-import constants.PanelType;
+import enums.PanelType;
 import lib.JFrameTemplate;
 import object.Bot;
 import object.Player;

@@ -1,6 +1,6 @@
 package panel;
 
-import constants.PanelType;
+import enums.PanelType;
 import data.Record;
 import data.RecordManager;
 import frame.Frame;

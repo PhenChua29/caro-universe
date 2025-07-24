@@ -1,4 +1,4 @@
-package constants;
+package enums;
 
 /**
  * The game's difficulty, which controls how the bot reacts.

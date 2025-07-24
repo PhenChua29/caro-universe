@@ -1,6 +1,6 @@
 package panel;
 
-import constants.EntityType;
+import enums.EntityType;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;

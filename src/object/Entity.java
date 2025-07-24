@@ -1,7 +1,7 @@
 package object;
 
-import constants.EntityType;
-import constants.Genders;
+import enums.EntityType;
+import enums.Genders;
 import java.util.Random;
 import javax.swing.ImageIcon;
 
@@ -16,6 +16,7 @@ public class Entity {
   private ImageIcon move;
   private int scores;
   private EntityType entityType;
+  private static int MOVE_COUNTS = 4;
 
   public Entity(String name, Genders gender, ImageIcon avatar, ImageIcon move, EntityType entityType) {
     this.name = name;
@@ -79,7 +80,7 @@ public class Entity {
 
   public int loadRandomMove() {
     Random randomizer = new Random();
-    final int num = randomizer.nextInt(4) + 1;
+    final int num = randomizer.nextInt(MOVE_COUNTS) + 1;
     String filePath = String.format("/img/elements/move%s.png", num);
     ImageIcon icon = new ImageIcon(getClass().getResource(filePath));
     move = icon;
@@ -91,7 +92,7 @@ public class Entity {
     int num = -1;
 
     do {
-      num = randomizer.nextInt(5) + 1;
+      num = randomizer.nextInt(MOVE_COUNTS) + 1;
     } while (num == number);
 
     String filePath = String.format("/img/elements/move%s.png", num);
