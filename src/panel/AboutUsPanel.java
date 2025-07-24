@@ -1,6 +1,6 @@
 package panel;
 
-import constants.PanelType;
+import enums.PanelType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import frame.Frame;

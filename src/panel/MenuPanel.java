@@ -1,6 +1,6 @@
 package panel;
 
-import constants.PanelType;
+import enums.PanelType;
 import frame.Frame;
 import java.awt.Color;
 import java.awt.Font;

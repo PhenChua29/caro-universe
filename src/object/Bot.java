@@ -1,8 +1,8 @@
 package object;
 
-import constants.Difficulty;
-import constants.EntityType;
-import constants.Genders;
+import enums.Difficulty;
+import enums.EntityType;
+import enums.Genders;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
