@@ -130,13 +130,13 @@ public class AboutUsPanel extends JPanel implements ActionListener {
     gbc.gridy = 3;
     gbc.gridx = 0;
     gridPanel.add(createMember(
-	    "<html><b>Nguyễn Phi Long</b><br><font size='3' color='gray'>CE170669 - <b><font color='#fdba14'>Leader</font></b></font></html>",
+	    "<html><b>Nguyễn Phi Long</b><br><font size='3'>CE170669 - <b><font color='#fdba14'>Leader</font></b></font></html>",
 	    "/img/about/long.jpg"
     ), gbc);
 
     gbc.gridx = 1;
     gridPanel.add(createMember(
-	    "<html><b>Trần Đức Toàn</b><br><font size='3' color='gray'>CE191605 - <b><font color='red'>Secretary</font></b></font></html>",
+	    "<html><b>Trần Đức Toàn</b><br><font size='3'>CE191605 - <b><font color='#fdba14'>Secretary</font></b></font></html>",
 	    "/img/about/toan.jpg"
     ), gbc);
 
@@ -144,13 +144,13 @@ public class AboutUsPanel extends JPanel implements ActionListener {
     gbc.gridy = 4;
     gbc.gridx = 0;
     gridPanel.add(createMember(
-	    "<html><b>Hoa Hồng Nhung</b><br><font size='3' color='gray'>CE182244</font></html>",
+	    "<html><b>Hoa Hồng Nhung</b><br><font size='3'>CE182244</font></html>",
 	    "/img/about/nhung.jpg"
     ), gbc);
 
     gbc.gridx = 1;
     gridPanel.add(createMember(
-	    "<html><b>Nguyễn Thị Mỹ Truyện</b><br><font size='3' color='gray'>CE181229</font></html>",
+	    "<html><b>Nguyễn Thị Mỹ Truyện</b><br><font size='3'>CE181229</font></html>",
 	    "/img/about/truyen.jpg"
     ), gbc);
 

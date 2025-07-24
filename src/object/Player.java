@@ -69,7 +69,7 @@ public class Player extends Entity {
 
   public void loadRandomAvatar() {
     Random randomizer = new Random();
-    final int num = randomizer.nextInt(3) + 1;
+    final int num = 1;
     String prefix = getGender() == Genders.MALE ? "m" : "f";
     String filePath = String.format("/img/avatar/%s%s.png", prefix, num);
     ImageIcon icon = new ImageIcon(getClass().getResource(filePath));

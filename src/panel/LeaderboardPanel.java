@@ -73,10 +73,10 @@ public class LeaderboardPanel extends JPanel implements ActionListener {
 	    c.setForeground(Color.decode("#fdba14"));
 	    c.setFont(new Font("Arial", Font.BOLD, 14));
 	  } else if (row == 1) {
-	    c.setForeground(Color.decode("#ef4a4a"));
+	    c.setForeground(Color.decode("#00FFFF"));
 	    c.setFont(new Font("Arial", Font.BOLD, 14));
 	  } else if (row == 2) {
-	    c.setForeground(Color.GREEN);
+	    c.setForeground(Color.decode("#32CD32"));
 	    c.setFont(new Font("Arial", Font.BOLD, 14));
 	  } else {
 	    c.setForeground(Color.WHITE);
