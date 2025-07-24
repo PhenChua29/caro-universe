@@ -79,8 +79,7 @@ public class Entity {
 
   public int loadRandomMove() {
     Random randomizer = new Random();
-//    final int num = randomizer.nextInt(4) + 1;
-    final int num = entityType == EntityType.BOT ? 3 : 4;
+    final int num = randomizer.nextInt(4) + 1;
     String filePath = String.format("/img/elements/move%s.png", num);
     ImageIcon icon = new ImageIcon(getClass().getResource(filePath));
     move = icon;
