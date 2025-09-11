@@ -34,11 +34,10 @@ public class InstructionPanel extends JPanel {
 
   public InstructionPanel() {
     setPreferredSize(new Dimension(800, 800));
-    setLayout(new BorderLayout());
 
     layeredPane = new JLayeredPane();
     layeredPane.setPreferredSize(new Dimension(800, 800));
-    this.add(layeredPane, BorderLayout.CENTER);
+    add(layeredPane);
 
     init_images();
     init_controls();
@@ -70,7 +69,7 @@ public class InstructionPanel extends JPanel {
   private void init_controls() {
     // Back Button on the far left
     backButton = new JButton(new ImageIcon(getClass().getResource("/img/button/left.png")));
-    backButton.setBounds(12, 370, 66, 72);
+    backButton.setBounds(24, 370, 66, 72);
     backButton.setContentAreaFilled(false);
     backButton.setBorderPainted(false);
     backButton.setFocusPainted(false);
@@ -79,7 +78,7 @@ public class InstructionPanel extends JPanel {
 
     // Next Button on the far right
     nextButton = new JButton(new ImageIcon(getClass().getResource("/img/button/right.png")));
-    nextButton.setBounds(722, 370, 66, 72);
+    nextButton.setBounds(710, 370, 66, 72);
     nextButton.setContentAreaFilled(false);
     nextButton.setBorderPainted(false);
     nextButton.setFocusPainted(false);
@@ -87,7 +86,7 @@ public class InstructionPanel extends JPanel {
     layeredPane.add(nextButton, JLayeredPane.MODAL_LAYER);
 
     returnButton = new JButton(new ImageIcon(getClass().getResource("/img/button/home.png")));
-    returnButton.setBounds(12, 710, 66, 72);
+    returnButton.setBounds(24, 690, 66, 72);
     returnButton.setContentAreaFilled(false);
     returnButton.setBorderPainted(false);
     returnButton.setFocusPainted(false);
