@@ -3,6 +3,7 @@ package panel;
 import enums.PanelType;
 import frame.Frame;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -34,15 +35,16 @@ public class InstructionPanel extends JPanel {
 
   public InstructionPanel() {
     setPreferredSize(new Dimension(800, 800));
-    setLayout(new BorderLayout());
 
     layeredPane = new JLayeredPane();
     layeredPane.setPreferredSize(new Dimension(800, 800));
-    this.add(layeredPane, BorderLayout.CENTER);
+    add(layeredPane);
 
     init_images();
     init_controls();
     init_keybindings();
+
+    setBackground(new Color(6, 5, 55));
   }
 
   private void init_images() {
@@ -50,12 +52,14 @@ public class InstructionPanel extends JPanel {
 
     for (int i = 1; i <= 5; i++) {
       try {
-	BufferedImage img = ImageIO.read(getClass().getResource("/img/instructions/" + i + ".png"));
-	images.add(new ImageIcon(img));
+        BufferedImage img = ImageIO.read(
+            getClass().getResource("/img/instructions/" + i + ".png"));
+        images.add(new ImageIcon(img));
       } catch (IOException | IllegalArgumentException ex) {
-	JOptionPane.showMessageDialog(this, "Failed to load instruction images!");
-	ex.printStackTrace();
-	return;
+        JOptionPane.showMessageDialog(this,
+                                      "Failed to load instruction images!");
+        ex.printStackTrace();
+        return;
       }
     }
 
@@ -69,8 +73,9 @@ public class InstructionPanel extends JPanel {
 
   private void init_controls() {
     // Back Button on the far left
-    backButton = new JButton(new ImageIcon(getClass().getResource("/img/button/left.png")));
-    backButton.setBounds(12, 370, 66, 72);
+    backButton = new JButton(
+        new ImageIcon(getClass().getResource("/img/button/left.png")));
+    backButton.setBounds(24, 370, 66, 72);
     backButton.setContentAreaFilled(false);
     backButton.setBorderPainted(false);
     backButton.setFocusPainted(false);
@@ -78,16 +83,18 @@ public class InstructionPanel extends JPanel {
     layeredPane.add(backButton, JLayeredPane.MODAL_LAYER);
 
     // Next Button on the far right
-    nextButton = new JButton(new ImageIcon(getClass().getResource("/img/button/right.png")));
-    nextButton.setBounds(722, 370, 66, 72);
+    nextButton = new JButton(
+        new ImageIcon(getClass().getResource("/img/button/right.png")));
+    nextButton.setBounds(710, 370, 66, 72);
     nextButton.setContentAreaFilled(false);
     nextButton.setBorderPainted(false);
     nextButton.setFocusPainted(false);
     nextButton.addActionListener(e -> showNextImage());
     layeredPane.add(nextButton, JLayeredPane.MODAL_LAYER);
 
-    returnButton = new JButton(new ImageIcon(getClass().getResource("/img/button/home.png")));
-    returnButton.setBounds(12, 710, 66, 72);
+    returnButton = new JButton(
+        new ImageIcon(getClass().getResource("/img/button/home.png")));
+    returnButton.setBounds(24, 690, 66, 72);
     returnButton.setContentAreaFilled(false);
     returnButton.setBorderPainted(false);
     returnButton.setFocusPainted(false);
@@ -95,8 +102,8 @@ public class InstructionPanel extends JPanel {
       Frame.switchPanel(PanelType.MENU);
 
       new Timer(600, evt -> {
-	resetToFirstImage();
-	((Timer) evt.getSource()).stop();
+        resetToFirstImage();
+        ((Timer)evt.getSource()).stop();
       }).start();
     });
 
@@ -115,14 +122,14 @@ public class InstructionPanel extends JPanel {
     am.put("goLeft", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-	showPreviousImage();
+        showPreviousImage();
       }
     });
 
     am.put("goRight", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-	showNextImage();
+        showNextImage();
       }
     });
   }
