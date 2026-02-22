@@ -16,7 +16,7 @@ public class Record implements Comparable<Record> {
   }
   
   public Record(String name) {
-    this(name , 0, 0);
+    this(name, 0, 0);
   }
   
   public int getTotalScore() {
