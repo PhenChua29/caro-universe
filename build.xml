@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!-- You may freely edit this file. See commented blocks below for -->
 <!-- some examples of how to customize the build. -->
 <!-- (If you delete it and reopen the project it will be recreated.) -->
@@ -9,12 +9,91 @@
 <!-- in the project's Project Properties dialog box.-->
 <project name="CaroUniverse" default="default" basedir=".">
     <description>Builds, tests, and runs the project CaroUniverse.</description>
-    <import file="nbproject/build-impl.xml"/>
+    <import file="nbproject/build-impl.xml" />
+
+    <fail message="Ant 1.10.15+ is required!">
+        <condition>
+            <not>
+                <antversion atleast="1.10.15" />
+            </not>
+        </condition>
+    </fail>
+
+    <path id="test.classpath">
+        <pathelement path="build/test" />
+        <pathelement path="build/main" />
+        <fileset dir="${ant.home}/lib" includes="*.jar" />
+    </path>
+
+    <target name="build" description="clean build" depends="clean, test" />
+
+    <target name="clean">
+        <delete dir="build" />
+    </target>
+
+    <target name="init">
+        <mkdir dir="build/main" />
+        <mkdir dir="build/test" />
+        <mkdir dir="build/test-report" />
+    </target>
+
+    <target name="compile" depends="init">
+        <javac destdir="build/main" srcdir="src" includeantruntime="false" />
+        <copy todir="build/main">
+            <fileset dir="src" excludes="**/*.java" />
+        </copy>
+        <javac
+            destdir="build/test"
+            classpathref="test.classpath"
+            srcdir="test"
+            includeantruntime="false"
+        />
+    </target>
+
+    <!-- https://docs.junit.org/snapshot/user-guide/#running-tests-build-ant -->
+    <target name="test.junit.launcher" depends="compile">
+        <junitlauncher haltOnFailure="true" printSummary="true">
+            <classpath refid="test.classpath" />
+            <testclasses outputdir="build/test-report">
+                <fileset dir="build/test">
+                    <include name="**/*Test.class" />
+                </fileset>
+                <listener
+                    type="legacy-xml"
+                    sendSysOut="true"
+                    sendSysErr="true"
+                />
+                <listener type="legacy-plain" sendSysOut="true" />
+            </testclasses>
+        </junitlauncher>
+    </target>
+
+    <!-- https://docs.junit.org/current/user-guide/#running-tests-console-launcher -->
+    <target name="test.console.launcher" depends="compile">
+        <java
+            classpathref="test.classpath"
+            classname="org.junit.platform.console.ConsoleLauncher"
+            fork="true"
+            failonerror="true"
+        >
+            <arg value="execute" />
+            <arg value="--scan-classpath" />
+            <arg line="--reports-dir build/test-report" />
+        </java>
+        <junitreport todir="build/test-report">
+            <fileset dir="build/test-report">
+                <include name="TEST-*.xml" />
+            </fileset>
+            <report format="frames" todir="build/test-report/html" />
+        </junitreport>
+    </target>
+
+    <target name="test" depends="test.junit.launcher, test.console.launcher" />
     <!--
 
-    There exist several targets which are by default empty and which can be 
-    used for execution of your tasks. These targets are usually executed 
-    before and after some main targets. They are: 
+    There exist several targets which are by default empty and which can be
+    used for execution of your tasks. These targets are usually executed
+    before and after some main targets. They are:
 
       -pre-init:                 called before initialization of project properties
       -post-init:                called after initialization of project properties
@@ -40,19 +119,19 @@
             </obfuscate>
         </target>
 
-    For list of available properties check the imported 
-    nbproject/build-impl.xml file. 
+    For list of available properties check the imported
+    nbproject/build-impl.xml file.
 
 
     Another way to customize the build is by overriding existing main targets.
-    The targets of interest are: 
+    The targets of interest are:
 
       -init-macrodef-javac:     defines macro for javac compilation
       -init-macrodef-junit:     defines macro for junit execution
       -init-macrodef-debug:     defines macro for class debugging
       -init-macrodef-java:      defines macro for class execution
       -do-jar:                  JAR building
-      run:                      execution of project 
+      run:                      execution of project
       -javadoc-build:           Javadoc generation
       test-report:              JUnit report generation
 
@@ -64,10 +143,10 @@
             </exec>
         </target>
 
-    Notice that the overridden target depends on the jar target and not only on 
-    the compile target as the regular run target does. Again, for a list of available 
+    Notice that the overridden target depends on the jar target and not only on
+    the compile target as the regular run target does. Again, for a list of available
     properties which you can use, check the target you are overriding in the
-    nbproject/build-impl.xml file. 
+    nbproject/build-impl.xml file.
 
     -->
 </project>
